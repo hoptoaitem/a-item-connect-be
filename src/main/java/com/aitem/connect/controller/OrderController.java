@@ -8,17 +8,21 @@ import com.aitem.connect.repository.UserRepository;
 import com.aitem.connect.request.OrderRequest;
 import com.aitem.connect.response.OrderResponse;
 import com.aitem.connect.service.implementition.OrderService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
+@Api(tags = "Order API")
+@CrossOrigin
 @RestController
 @RequestMapping("/")
 public class OrderController {
 
-    /*
+
     private OrderService service;
     private AuthenticationRepository authenticationRepository;
     private UserRepository userRepository;
@@ -33,6 +37,7 @@ public class OrderController {
         this.userRepository = userRepository;
     }
 
+    @ApiOperation(value = "Get the orders for the store")
     @GetMapping(path = "/orders", consumes = "application/json", produces = "application/json")
     public List<OrderResponse> getOrders(@RequestHeader("api-key-token") String key) {
 
@@ -44,6 +49,7 @@ public class OrderController {
         return service.getOrder(user);
     }
 
+    @ApiOperation(value = "Created the orders for the store")
     @PostMapping(path = "/orders", consumes = "application/json", produces = "application/json")
     public UUID createOrder(@RequestHeader("api-key-token") String key,
                             @RequestBody OrderRequest request) {
@@ -56,6 +62,4 @@ public class OrderController {
         OrderModel model = service.createOrder(request, user);
         return UUID.fromString(model.getId());
     }
-
-     */
 }

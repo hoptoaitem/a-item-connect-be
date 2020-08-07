@@ -9,11 +9,16 @@ import com.aitem.connect.repository.AuthenticationRepository;
 import com.aitem.connect.repository.UserRepository;
 import com.aitem.connect.request.LoginRequest;
 import com.aitem.connect.response.LoginResponse;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(tags = "Login API")
+@CrossOrigin
 @RestController
 public class LoginController {
 
@@ -30,6 +35,7 @@ public class LoginController {
         this.userRepository = userRepository;
     }
 
+    @ApiOperation(value = "Login for the application")
     @PostMapping(path = "/login", consumes = "application/json", produces = "application/json")
     public LoginResponse login(@RequestBody LoginRequest request) {
 
@@ -65,6 +71,7 @@ public class LoginController {
         throw new IllegalArgumentException();
     }
 
+    @ApiOperation(value = "Create user for the application")
     @PostMapping(path = "/user", consumes = "application/json", produces = "application/json")
     public LoginResponse createUser(@RequestBody LoginRequest request) {
 

@@ -9,17 +9,20 @@ import com.aitem.connect.request.StoreRequest;
 import com.aitem.connect.response.OrderResponse;
 import com.aitem.connect.response.StoreResponse;
 import com.aitem.connect.service.implementition.StoreService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
+@Api(tags = "Store API")
+@CrossOrigin
 @RestController
 @RequestMapping("/")
 public class StoresController {
 
-    /*
     private StoreService service;
     private AuthenticationRepository authenticationRepository;
     private UserRepository userRepository;
@@ -35,6 +38,7 @@ public class StoresController {
         this.userRepository = userRepository;
     }
 
+    @ApiOperation(value = "Get the stores for the user")
     @GetMapping(path = "/stores", consumes = "application/json", produces = "application/json")
     public List<StoreResponse> getStores(@RequestHeader("api-key-token") String key) {
 
@@ -46,6 +50,7 @@ public class StoresController {
         return service.getStores(user);
     }
 
+    @ApiOperation(value = "Get the store orders for the user")
     @GetMapping(path = "/stores/{store-id}/orders", consumes = "application/json", produces = "application/json")
     public List<OrderResponse> getStoresOrders(@RequestHeader("api-key-token") String key,
                                                @PathVariable ("store-id")String storeId) {
@@ -58,6 +63,7 @@ public class StoresController {
         return service.getOrdersByStores(storeId);
     }
 
+    @ApiOperation(value = "Create the stores for the submitted request")
     @PostMapping(path = "/stores", consumes = "application/json", produces = "application/json")
     public UUID createStore(@RequestHeader("api-key-token") String key,
                             @RequestBody StoreRequest request) {
@@ -70,6 +76,4 @@ public class StoresController {
         StoreModel model = service.createStore(request, user);
         return UUID.fromString(model.getId());
     }
-
-     */
 }
