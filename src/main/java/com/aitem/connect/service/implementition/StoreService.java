@@ -1,6 +1,7 @@
 package com.aitem.connect.service.implementition;
 
 import com.aitem.connect.enums.ProfileType;
+import com.aitem.connect.mapper.AddressMapper;
 import com.aitem.connect.model.*;
 import com.aitem.connect.repository.AddressRepository;
 import com.aitem.connect.repository.OrderRepository;
@@ -44,7 +45,7 @@ public class StoreService implements Store {
     public StoreModel createStore(StoreRequest request, User user) {
         // TODO : replace with all builders
         AddressRequest addressRequest = request.getAddress();
-        AddressModel addressModel = getAddressModel(addressRequest);
+        AddressModel addressModel = AddressMapper.getAddressModel(addressRequest);
         addressModel.setId(UUID.randomUUID().toString());
         addressModel = addressRepository.save(addressModel);
 
@@ -68,17 +69,7 @@ public class StoreService implements Store {
         return storeModel;
     }
 
-    // TODO : replace with mapper
-    private AddressModel getAddressModel(AddressRequest addressRequest) {
-        AddressModel model = new AddressModel();
-        model.setAddressName(addressRequest.getAddressName());
-        model.setStreetAddress(addressRequest.getStreetAddress());
-        model.setStreetAddress1(addressRequest.getStreetAddress1());
-        model.setCity(addressRequest.getCity());
-        model.setState(addressRequest.getState());
-        model.setZip(addressRequest.getZip());
-        return model;
-    }
+
 
     public List<StoreResponse> getStores(User user) {
 

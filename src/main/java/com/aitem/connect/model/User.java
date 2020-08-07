@@ -27,6 +27,12 @@ public class User implements Serializable {
 	private String profileType;
 	private String addressId;
 
+	private String firstName;
+	private String lastName;
+	private String email;
+	private String phone;
+	private String status;
+
 	private Date createdAt;
 	private Date modifiedAt;
 	private String createdBy;

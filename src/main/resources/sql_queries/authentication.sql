@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS authentication (
-    id SERIAL PRIMARY KEY,
-    token VARCHAR(128) NOT NULL,
-    user_id INTEGER NOT NULL,
+    id VARCHAR(100) PRIMARY KEY,
+    token VARCHAR(400) NOT NULL,
+    user_id VARCHAR(100) NOT NULL UNIQUE,
     created_by VARCHAR(100),
     modified_by VARCHAR(100),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

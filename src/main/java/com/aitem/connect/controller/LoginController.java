@@ -1,13 +1,19 @@
 package com.aitem.connect.controller;
 
 import com.aitem.connect.enums.ProfileType;
+import com.aitem.connect.enums.UserStatus;
 import com.aitem.connect.helper.Crypt;
 import com.aitem.connect.helper.CryptData;
+import com.aitem.connect.mapper.AddressMapper;
+import com.aitem.connect.model.AddressModel;
 import com.aitem.connect.model.Authentication;
 import com.aitem.connect.model.User;
+import com.aitem.connect.repository.AddressRepository;
 import com.aitem.connect.repository.AuthenticationRepository;
 import com.aitem.connect.repository.UserRepository;
+import com.aitem.connect.request.AddressRequest;
 import com.aitem.connect.request.LoginRequest;
+import com.aitem.connect.request.UserRequest;
 import com.aitem.connect.response.LoginResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,6 +23,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
+import java.util.UUID;
+
 @Api(tags = "Login API")
 @CrossOrigin
 @RestController
@@ -24,15 +33,18 @@ public class LoginController {
 
 
     private UserRepository userRepository;
+    private AddressRepository addressRepository;
     private AuthenticationRepository authenticationRepository;
     private Crypt crypt;
 
     private LoginController(@Autowired Crypt crypt,
                             @Autowired AuthenticationRepository authenticationRepository,
-                            @Autowired UserRepository userRepository) {
+                            @Autowired UserRepository userRepository,
+                            @Autowired AddressRepository addressRepository) {
         this.crypt = crypt;
         this.authenticationRepository = authenticationRepository;
         this.userRepository = userRepository;
+        this.addressRepository = addressRepository;
     }
 
     @ApiOperation(value = "Login for the application")
@@ -57,33 +69,53 @@ public class LoginController {
                         = authenticationRepository.findByUserId(user.getId());
                 if (authentication == null) {
                     Authentication a = new Authentication();
-                    a.setToken(crypt.encrypt(user.getUsername()).getCipherText());
+                    a.setId(UUID.randomUUID().toString());
+                    a.setToken(crypt.encrypt(user.getUsername()+"-"+
+                    LocalDate.now()+"-"+UUID.randomUUID().toString()).getCipherText());
                     a.setUserId(user.getId());
-                    authenticationRepository.save(a);
+                    authentication = authenticationRepository.save(a);
                 }
                 response.setAuthToken(authentication.getToken());
+                response.setProfileType(user.getProfileType());
 
                 return response;
             }
         } catch (Exception e) {
-
+            System.out.println("Exception on proceesing user");
+            System.out.println(e.getMessage());
+            throw new IllegalArgumentException(e);
         }
         throw new IllegalArgumentException();
     }
 
     @ApiOperation(value = "Create user for the application")
     @PostMapping(path = "/user", consumes = "application/json", produces = "application/json")
-    public LoginResponse createUser(@RequestBody LoginRequest request) {
-
+    public LoginResponse createUser(@RequestBody UserRequest request) {
 
         CryptData a = crypt.encrypt(request.getPassword());
 
         User user = new User();
+        user.setId(UUID.randomUUID().toString());
         user.setIv(new String(a.getIv()));
         user.setSalt(new String(a.getSalt()));
         user.setPass(a.getCipherText());
         user.setUsername(request.getUsername());
-        user.setProfileType(ProfileType.NOT_DECIDED.getCode());
+        if (request.getProfileType().equals(ProfileType.CUSTOMER)) {
+            user.setStatus(UserStatus.APPROVED.name());
+        } else {
+            user.setStatus(UserStatus.SUBMITTED.name());
+        }
+        user.setProfileType(request.getProfileType().name());
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setEmail(request.getEmail());
+        user.setPhone(request.getPhone());
+
+        AddressRequest address = request.getAddress();
+        AddressModel addressModel = AddressMapper.getAddressModel(address);
+        addressModel.setId(UUID.randomUUID().toString());
+        addressRepository.save(addressModel);
+        user.setAddressId(addressModel.getId());
 
         userRepository.save(user);
         LoginResponse response = new LoginResponse();
