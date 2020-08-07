@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS authentication (
+    id SERIAL PRIMARY KEY,
+    token VARCHAR(128) NOT NULL,
+    user_id INTEGER NOT NULL,
+    created_by VARCHAR(100),
+    modified_by VARCHAR(100),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    modified_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    expire_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
