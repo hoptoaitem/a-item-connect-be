@@ -1,7 +1,12 @@
 package com.aitem.connect.service.implementition;
 
+import com.aitem.connect.enums.ProfileType;
 import com.aitem.connect.model.ItemModel;
+import com.aitem.connect.model.RetailerUserModel;
+import com.aitem.connect.model.StoreModel;
+import com.aitem.connect.model.User;
 import com.aitem.connect.repository.ItemRepository;
+import com.aitem.connect.repository.RetailerUserRepository;
 import com.aitem.connect.request.ItemRequest;
 import com.aitem.connect.service.Item;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,20 +20,31 @@ import java.util.UUID;
 public class ItemService implements Item {
 
     private ItemRepository itemRepository;
+    private RetailerUserRepository retailerUserRepository;
+
 
     private ItemService(
-            @Autowired ItemRepository itemRepository
+            @Autowired ItemRepository itemRepository,
+            @Autowired RetailerUserRepository retailerUserRepository
     ) {
         this.itemRepository = itemRepository;
+        this.retailerUserRepository = retailerUserRepository;
     }
 
     @Override
-    public ItemModel createItem(ItemRequest request) {
+    public ItemModel createItem(ItemRequest request, User user) {
 
         ItemModel model = getModel(request);
         model.setId(UUID.randomUUID().toString());
         model.setCreatedAt(new Date());
         model.setModifiedAt(new Date());
+
+        if (user.getProfileType().equals(ProfileType.RETAILER.name())) {
+            RetailerUserModel retailerUserModel
+                    = retailerUserRepository.findByUserId(user.getId()).stream().findAny()
+                    .orElseThrow(IllegalArgumentException::new);
+            model.setStoreId(retailerUserModel.getStoreId());
+        }
         model = itemRepository.save(model);
         return model;
     }

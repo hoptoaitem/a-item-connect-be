@@ -1,5 +1,6 @@
 package com.aitem.connect.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import javax.persistence.Entity;
@@ -14,6 +15,7 @@ import java.util.Date;
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
+@JsonInclude(JsonInclude.Include.NON_NULL) //or Include.NON_EMPTY, if that fits your use case
 public class ItemModel {
 
 	@Id

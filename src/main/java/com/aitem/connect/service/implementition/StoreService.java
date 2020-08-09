@@ -56,7 +56,7 @@ public class StoreService implements Store {
         storeModel.setRetailerUserId(request.getRetailerUserId());
         storeModel = storeRepository.save(storeModel);
 
-        if (user.getProfileType().equals(ProfileType.RETAILER)) {
+        if (user.getProfileType().equals(ProfileType.RETAILER.name())) {
             RetailerUserModel retailerUserModel = new RetailerUserModel();
             retailerUserModel.setId(UUID.randomUUID().toString());
             retailerUserModel.setUserId(user.getId());
@@ -74,12 +74,15 @@ public class StoreService implements Store {
     public List<StoreResponse> getStores(User user) {
 
         List<StoreModel> storeList = new ArrayList<>();
-        if (user.getProfileType().equals(ProfileType.RETAILER)) {
+        if (user.getProfileType().equals(ProfileType.RETAILER.name())) {
             List<RetailerUserModel> retailerUserModelList
                     = retailerUserRepository.findByUserId(user.getId());
-            storeList.addAll(retailerUserModelList.parallelStream().map(item ->
-                    storeRepository.findById(item.getStoreId()).orElseThrow(IllegalArgumentException::new)
-            ).collect(Collectors.toList()));
+
+            for (RetailerUserModel item : retailerUserModelList){
+                StoreModel model = storeRepository.findById(item.getStoreId())
+                        .orElseThrow(IllegalArgumentException::new);
+                storeList.add(model);
+            }
         } else {
             storeList.addAll(storeRepository.findAll());
         }

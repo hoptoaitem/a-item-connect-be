@@ -1,11 +1,10 @@
 package com.aitem.connect.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
-import javax.persistence.Id;
-import java.util.Date;
-
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL) //or Include.NON_EMPTY, if that fits your use case
 public class ItemResponse {
     private String id;
     private String name;
