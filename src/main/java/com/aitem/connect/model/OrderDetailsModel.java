@@ -33,8 +33,7 @@ public class OrderDetailsModel {
     private String id;
     private String orderId;
     private String itemId;
-    private String userId;
-    private String driverId;
+
     @Column(name="qty")
     private Integer quantity;
 

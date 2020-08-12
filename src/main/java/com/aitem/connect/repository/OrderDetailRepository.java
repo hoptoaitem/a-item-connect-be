@@ -9,7 +9,5 @@ import java.util.List;
 
 public interface OrderDetailRepository extends JpaRepository<OrderDetailsModel, String> {
 
-    List<OrderDetailsModel> findByDriverId(@Param("driverId") String driverId);
     List<OrderDetailsModel> findByOrderId(@Param("orderId") String orderId);
-
 }

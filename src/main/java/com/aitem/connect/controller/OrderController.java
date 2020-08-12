@@ -6,6 +6,7 @@ import com.aitem.connect.model.User;
 import com.aitem.connect.repository.AuthenticationRepository;
 import com.aitem.connect.repository.UserRepository;
 import com.aitem.connect.request.OrderRequest;
+import com.aitem.connect.request.UpdateOrderRequest;
 import com.aitem.connect.response.OrderResponse;
 import com.aitem.connect.service.implementition.OrderService;
 import io.swagger.annotations.Api;
@@ -60,6 +61,22 @@ public class OrderController {
                         () -> new IllegalArgumentException("User not found"));
 
         OrderModel model = service.createOrder(request, user);
+        return UUID.fromString(model.getId());
+    }
+
+    @ApiOperation(value = "Created the orders for the store")
+    @PutMapping(path = "/orders/{order_id}", consumes = "application/json", produces = "application/json")
+    public UUID updateOrder(@RequestHeader("api-key-token") String key,
+                            @RequestParam("order_id") String orderId,
+                            @RequestBody UpdateOrderRequest request) {
+
+        Authentication authentication = authenticationRepository.findByToken(key);
+        User user = userRepository.findById(authentication.getUserId())
+                .orElseThrow(
+                        () -> new IllegalArgumentException("User not found"));
+
+        // TODO: match orderID and request orderID
+        OrderModel model = service.updateOrder(request, user);
         return UUID.fromString(model.getId());
     }
 }

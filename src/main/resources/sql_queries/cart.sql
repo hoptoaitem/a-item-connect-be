@@ -1,9 +1,8 @@
-CREATE TABLE IF NOT EXISTS shop_order (
+CREATE TABLE IF NOT EXISTS cart (
     id VARCHAR(128) PRIMARY KEY,
-    order_external_ref_id VARCHAR(128) NOT NULL,
-    store_id VARCHAR(128) NOT NULL,
-    user_id VARCHAR(128) ,
-    driver_id VARCHAR(128),
+    order_id VARCHAR(128) NOT NULL,
+    user_id VARCHAR(128) NOT NULL,
+    store_id VARCHAR(128),
     created_by VARCHAR(100),
     modified_by VARCHAR(100),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

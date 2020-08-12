@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS user (
+    id VARCHAR(128) PRIMARY KEY,
+    user_id VARCHAR(128),
+    created_by VARCHAR(100),
+    modified_by VARCHAR(100),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    modified_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )

@@ -1,5 +1,6 @@
 package com.aitem.connect.model;
 
+import com.aitem.connect.enums.CartStatus;
 import com.aitem.connect.enums.OrderStatus;
 import lombok.*;
 
@@ -17,28 +18,23 @@ import java.util.Date;
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
-public class OrderModel implements Serializable {
+public class CartModel implements Serializable {
 	/*
-	id VARCHAR(128) PRIMARY KEY,
-	order_external_ref_id VARCHAR(128) NOT NULL,
-	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-	modified_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-	status VARCHAR(128) NOT NULL
+CREATE TABLE IF NOT EXISTS cart (
+    created_by VARCHAR(100),
+    modified_by VARCHAR(100),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    modified_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(128) NOT NULL
+)
+
 		*/
 
 	@Id
 	private String id;
-	@Column(name="order_external_ref_id")
-	private String orderExternalReferenceId;
+	private String orderId;
 	@Column(name="status")
-	private OrderStatus orderStatus;
-	private String storeId;
-
+	private CartStatus status;
 	private String userId;
-	private String driverId;
-
-	private Date createdAt;
-	private Date modifiedAt;
-	private String createdBy;
-	private String modifiedBy;
+	private String storeId;
 }

@@ -1,9 +1,7 @@
-CREATE TABLE IF NOT EXISTS order_detail (
+CREATE TABLE IF NOT EXISTS order_item (
     id VARCHAR(128) PRIMARY KEY,
     order_id VARCHAR(128) NOT NULL,
     item_id VARCHAR(128) NOT NULL,
-    user_id VARCHAR(128) NOT NULL,
-    driver_id VARCHAR(128) NOT NULL,
     created_by VARCHAR(100),
     modified_by VARCHAR(100),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
