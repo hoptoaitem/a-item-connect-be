@@ -18,7 +18,8 @@ import java.io.InputStreamReader;
 public class AWSTest1 {
 
 	public static void main(String[] args) throws IOException {
-
+		System.setProperty("aws.accessKeyId", "AKIA6C5C7W2C4TVVHWNV");
+		System.setProperty("aws.secretKey", "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");
 
 		Regions clientRegion = Regions.US_EAST_2;
 		String bucketName = "a-item-connect-dev";

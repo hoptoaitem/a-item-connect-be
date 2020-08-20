@@ -25,7 +25,8 @@ public class AWSTest {
 
 			System.out.println(fileObjKeyName);
 
-
+			System.setProperty("aws.accessKeyId", "AKIA6C5C7W2C4TVVHWNV");
+			System.setProperty("aws.secretKey", "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");
 
 
 
@@ -42,10 +43,12 @@ public class AWSTest {
 			//s3Client.putObject(bucketName, stringObjKeyName, "Uploaded String Object");
 
 			// Upload a file as a new object with ContentType and title specified.
+
+
 			PutObjectRequest request = new PutObjectRequest(bucketName, fileObjKeyName, new File("/Users/achyutneupane/Desktop/junk.txt"));
 			ObjectMetadata metadata = new ObjectMetadata();
 			//metadata.setContentType("plain/text");
-			metadata.addUserMetadata("title", "someTitle");
+			//metadata.addUserMetadata("title", "someTitle");
 			request.setMetadata(metadata);
 			s3Client.putObject(request);
 		} catch (AmazonServiceException e) {
