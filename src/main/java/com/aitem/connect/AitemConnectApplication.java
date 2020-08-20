@@ -13,8 +13,6 @@ import springfox.documentation.spring.web.plugins.Docket;
 public class AitemConnectApplication {
 
     public static void main(String[] args) {
-        System.setProperty("aws.accessKeyId", "AKIA6C5C7W2C4TVVHWNV");
-        System.setProperty("aws.secretKey", "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");
 
         SpringApplication.run(AitemConnectApplication.class, args);
     }

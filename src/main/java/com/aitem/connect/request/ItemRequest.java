@@ -34,4 +34,5 @@ public class ItemRequest implements Serializable {
 	private String visibility;
 
 	private String storeId;
+	private String pictureId;
 }

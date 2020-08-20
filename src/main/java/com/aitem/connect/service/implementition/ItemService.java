@@ -71,7 +71,7 @@ public class ItemService implements Item {
         model.setWeight(request.getWeight());
         model.setVisibility(request.getVisibility());
         model.setStoreId(request.getStoreId());
-
+        model.setPictureId(request.getPictureId());
         return model;
     }
 

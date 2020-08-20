@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS item (
   store_id VARCHAR(100),
   created_by VARCHAR(100),
   modified_by VARCHAR(100),
+  picture_id VARCHAR(100),
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   modified_at DATETIME DEFAULT CURRENT_TIMESTAMP
 )

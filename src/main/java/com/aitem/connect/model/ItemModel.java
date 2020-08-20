@@ -38,4 +38,5 @@ public class ItemModel {
 	private String modifiedBy;
 
 	private String storeId;
+	private String pictureId;
 }
