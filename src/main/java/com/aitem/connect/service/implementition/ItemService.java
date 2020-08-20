@@ -12,9 +12,11 @@ import com.aitem.connect.service.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemService implements Item {
@@ -71,5 +73,27 @@ public class ItemService implements Item {
         model.setStoreId(request.getStoreId());
 
         return model;
+    }
+
+    public List<ItemModel> getItems(User user) {
+
+        if (user.getProfileType().equals(ProfileType.RETAILER.name())) {
+
+            List<RetailerUserModel> retailerUserModel
+                    = retailerUserRepository.findByUserId(user.getId())
+                    .stream()
+                    .collect(Collectors.toList());
+
+
+            List<String> stores = retailerUserModel.stream()
+                    .map(RetailerUserModel::getStoreId).collect(Collectors.toList());
+
+            return stores.stream().map(item -> itemRepository.findByStoreId(item))
+                    .collect(Collectors.toList())
+                    .stream()
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toList());
+        }
+        return null;
     }
 }

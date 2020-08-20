@@ -37,12 +37,26 @@ public class ItemController {
         this.userRepository = userRepository;
     }
 
+    /*
     @ApiOperation(value = "get the items for the store")
     @GetMapping(path = "/items", consumes = "application/json", produces = "application/json")
     public List<ItemModel> getItems(@RequestHeader("api-key-token") String key,
                                     @RequestParam("store_id") String storeId) {
         // TODO : validate user type
         return service.getItems(storeId);
+    }*/
+
+    @ApiOperation(value = "get the items for the store")
+    @GetMapping(path = "/items", consumes = "application/json", produces = "application/json")
+    public List<ItemModel> getItems(@RequestHeader("api-key-token") String key) {
+        // TODO : validate user type
+
+        Authentication authentication = authenticationRepository.findByToken(key);
+        User user = userRepository.findById(authentication.getUserId())
+                .orElseThrow(
+                        () -> new IllegalArgumentException("User not found"));
+
+        return service.getItems(user);
     }
 
     // TODO : pass as list

@@ -67,6 +67,7 @@ public class PictureService implements Picture {
 
         String text = null;
         try {
+            // TODO: make S3 read only access
             String bucketName = "a-item-connect-dev";
             String fileObjKeyName = (file.getName() + "_" + ZonedDateTime.now())
                     .replaceAll("[^\\p{IsAlphabetic}\\p{IsDigit}]", "");

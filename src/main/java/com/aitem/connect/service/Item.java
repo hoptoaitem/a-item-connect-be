@@ -11,4 +11,6 @@ public interface Item {
     ItemModel createItem(ItemRequest request, User user);
 
     List<ItemModel> getItems(String storeId);
+
+    List<ItemModel> getItems(User user);
 }
