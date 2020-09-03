@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS order_item (
+CREATE TABLE IF NOT EXISTS order_detail (
     id VARCHAR(128) PRIMARY KEY,
     order_id VARCHAR(128) NOT NULL,
     item_id VARCHAR(128) NOT NULL,

@@ -39,4 +39,5 @@ public class ItemModel {
 
 	private String storeId;
 	private String pictureId;
+	private String externalRefId;
 }

@@ -54,6 +54,8 @@ public class StoreService implements Store {
         storeModel.setAddressId(addressModel.getId());
         storeModel.setPhoneNo(request.getPhone());
         storeModel.setRetailerUserId(request.getRetailerUserId());
+        storeModel.setEmail(request.getEmail());
+        storeModel.setWebsite(request.getWebsite());
         storeModel = storeRepository.save(storeModel);
 
         if (user.getProfileType().equals(ProfileType.RETAILER.name())) {

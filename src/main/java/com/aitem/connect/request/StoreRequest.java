@@ -23,4 +23,6 @@ public class StoreRequest implements Serializable {
 	// TODO :  get from header
 	private String retailerUserId;
 	private String phone;
+	private String email;
+	private String website;
 }

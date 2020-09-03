@@ -1,6 +1,7 @@
 package com.aitem.connect.service.implementition;
 
 import com.aitem.connect.enums.ProfileType;
+import com.aitem.connect.helper.AitemConnectHelper;
 import com.aitem.connect.model.ItemModel;
 import com.aitem.connect.model.RetailerUserModel;
 import com.aitem.connect.model.StoreModel;
@@ -72,6 +73,8 @@ public class ItemService implements Item {
         model.setVisibility(request.getVisibility());
         model.setStoreId(request.getStoreId());
         model.setPictureId(request.getPictureId());
+        model.setExternalRefId(
+                String.valueOf(AitemConnectHelper.getRandomNumber(8)));
         return model;
     }
 
