@@ -10,7 +10,7 @@ public interface CartRepository extends JpaRepository<CartModel, String> {
     CartModel findByUserId(@Param("userId") String userId);
 
     CartModel findByUserIdAndStatus(@Param("userId") String userId,
-                                    @Param("userId") String status);
+                                    @Param("status") String status);
 
     CartModel findByOrderId(@Param("orderId") String orderId);
 }

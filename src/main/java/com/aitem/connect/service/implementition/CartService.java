@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,6 +52,8 @@ public class CartService implements Cart {
         this.itemRepository = itemRepository;
         this.storeRepository = storeRepository;
         this.retailerUserRepository = retailerUserRepository;
+        this.cartRepository = cartRepository;
+        this.orderDAO = orderDAO;
     }
 
 
@@ -73,6 +76,30 @@ public class CartService implements Cart {
                 response.setItems(orderDetails.stream()
                         .map(this::getItemResponse).collect(Collectors.toList()));
             }
+
+            // create cart
+            /*
+            	@Id
+
+
+
+
+	private Date createdAt;
+	private Date modifiedAt;
+	private String createdBy;
+	private String modifiedBy;
+             */
+
+            CartModel cartModel = new CartModel();
+            cartModel.setId(UUID.randomUUID().toString());
+            cartModel.setOrderId(order.getId());
+            cartModel.setStatus(CartStatus.IN_PROGRESS.name());
+            cartModel.setUserId(user.getId());
+            cartModel.setStoreId(order.getStoreId());
+
+            cartRepository.save(cartModel);
+
+
             return response;
         }
         OrderModel oderModel = orderRepository.findById(model.getOrderId())
@@ -87,7 +114,7 @@ public class CartService implements Cart {
         OrderRequest orderRequest = new OrderRequest();
         List<OrderItemDetails> items = new ArrayList<>();
         OrderItemDetails item = new OrderItemDetails();
-        item.setItemId(item.getItemId());
+        item.setItemId(request.getItemId());
         item.setQuantity(request.getQuantity());
         items.add(item);
 
@@ -105,7 +132,7 @@ public class CartService implements Cart {
         }
 
         response.setId(model.getId());
-        response.setStatus(model.getStatus());
+        response.setStatus(CartStatus.valueOf(model.getStatus()));
         response.setOrderId(model.getOrderId());
 
         OrderModel order = orderRepository.findById(model.getOrderId())

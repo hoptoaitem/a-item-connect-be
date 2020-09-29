@@ -97,6 +97,11 @@ public class ItemService implements Item {
                     .flatMap(Collection::stream)
                     .collect(Collectors.toList());
         }
+
+        if (user.getProfileType().equals(ProfileType.CUSTOMER.name())) {
+
+            return itemRepository.findAll();
+        }
         return null;
     }
 }

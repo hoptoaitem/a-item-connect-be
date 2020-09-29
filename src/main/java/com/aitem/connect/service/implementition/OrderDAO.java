@@ -178,7 +178,7 @@ public class OrderDAO {
         orderModel.setOrderStatus(request.getOrderStatus());
         if (request.getOrderStatus() == OrderStatus.CHECKED_OUT) {
             CartModel cartModel = cartRepository.findByOrderId(request.getOrderId());
-            cartModel.setStatus(CartStatus.COMPLETE);
+            cartModel.setStatus(CartStatus.COMPLETE.name());
             cartRepository.save(cartModel);
         }
         return orderRepository.save(orderModel);
