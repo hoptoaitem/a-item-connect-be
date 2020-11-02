@@ -42,6 +42,11 @@ public class OrderService implements Order {
     }
 
     @Override
+    public List<OrderResponse> getOrderHistory(User user) {
+        return orderDAO.getOrderHistory(user);
+    }
+
+    @Override
     public OrderModel updateOrder(UpdateOrderRequest request, User user) {
         return orderDAO.updateOrderStatus(request, user);
     }

@@ -31,4 +31,6 @@ public class OrderResponse {
 
 
     List<ItemResponse> items;
+
+    private Contact contact;
 }

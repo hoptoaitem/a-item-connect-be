@@ -50,6 +50,18 @@ public class OrderController {
         return service.getOrder(user);
     }
 
+    @ApiOperation(value = "Get the orders history")
+    @GetMapping(path = "/orders/history", consumes = "application/json", produces = "application/json")
+    public List<OrderResponse> getOrdersHistory(@RequestHeader("api-key-token") String key) {
+
+        Authentication authentication = authenticationRepository.findByToken(key);
+        User user = userRepository.findById(authentication.getUserId())
+                .orElseThrow(
+                        () -> new IllegalArgumentException("User not found"));
+
+        return service.getOrderHistory(user);
+    }
+
     @ApiOperation(value = "Created the orders for the store")
     @PostMapping(path = "/orders", consumes = "application/json", produces = "application/json")
     public UUID createOrder(@RequestHeader("api-key-token") String key,
@@ -67,7 +79,7 @@ public class OrderController {
     @ApiOperation(value = "Created the orders for the store")
     @PutMapping(path = "/orders/{order_id}", consumes = "application/json", produces = "application/json")
     public UUID updateOrder(@RequestHeader("api-key-token") String key,
-                            @RequestParam("order_id") String orderId,
+                            @PathVariable("order_id") String orderId,
                             @RequestBody UpdateOrderRequest request) {
 
         Authentication authentication = authenticationRepository.findByToken(key);

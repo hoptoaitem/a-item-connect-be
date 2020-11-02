@@ -15,4 +15,6 @@ public interface Order {
     List<OrderResponse> getOrder(User user);
 
     OrderModel updateOrder(UpdateOrderRequest request, User user);
+
+    List<OrderResponse> getOrderHistory(User user);
 }

@@ -39,7 +39,8 @@ public class OrderDAO {
             @Autowired UserRepository userRepository,
             @Autowired ItemRepository itemRepository,
             @Autowired StoreRepository storeRepository,
-            @Autowired RetailerUserRepository retailerUserRepository
+            @Autowired RetailerUserRepository retailerUserRepository,
+            @Autowired CartRepository cartRepository
     ) {
         this.orderRepository = orderRepository;
         this.orderDetailRepository = orderDetailRepository;
@@ -48,6 +49,7 @@ public class OrderDAO {
         this.itemRepository = itemRepository;
         this.storeRepository = storeRepository;
         this.retailerUserRepository = retailerUserRepository;
+        this.cartRepository = cartRepository;
     }
 
     public OrderModel createOrder(OrderRequest request, User user) {
@@ -55,7 +57,7 @@ public class OrderDAO {
         model.setId(UUID.randomUUID().toString());
         model.setOrderExternalReferenceId
                 (String.valueOf(AitemConnectHelper.getRandomNumber(8)));
-        model.setOrderStatus(OrderStatus.IN_CART);
+        model.setOrderStatus(OrderStatus.IN_CART.name());
         //model.setPurchasedOn(new Date());
         model.setUserId(user.getId());
 
@@ -87,7 +89,8 @@ public class OrderDAO {
     public List<OrderResponse> getOrder(User user) {
         if (user.getProfileType().equals(ProfileType.DRIVER.name())) {
             return orderRepository.findByDriverId(user.getId()).stream()
-                    .map(this::getOrderResponse).collect(Collectors.toList());
+                    .map(this::getOrderResponse)
+                    .collect(Collectors.toList());
         }
         // shoppers
         if (user.getProfileType().equals(ProfileType.RETAILER.name())) {
@@ -117,12 +120,51 @@ public class OrderDAO {
                 .map(this::getOrderResponse).collect(Collectors.toList());
     }
 
+    public List<OrderResponse> getOrderHistory(User user) {
+        if (user.getProfileType().equals(ProfileType.DRIVER.name())) {
+            return orderRepository.findByDriverId(user.getId()).stream()
+                    .map(this::getOrderResponse)
+                    .filter(x -> x.getOrderStatus() == OrderStatus.DELIVERED)
+                    .collect(Collectors.toList());
+        }
+        // shoppers
+        if (user.getProfileType().equals(ProfileType.RETAILER.name())) {
+            List<RetailerUserModel> retailerUserModels
+                    = retailerUserRepository.findByUserId(user.getId());
+
+            List<StoreModel> storeModels =
+                    retailerUserModels.stream().map
+                            (retailerUserModel -> storeRepository
+                                    .findById(retailerUserModel.getStoreId())
+                                    .orElseThrow(IllegalArgumentException::new))
+                            .collect(Collectors.toList());
+
+            List<OrderModel> orderModels = storeModels.stream().map(
+                    storeModel -> orderRepository
+                            .findByStoreId(storeModel.getId())
+            ).flatMap(Collection::stream)
+                    .collect(Collectors.toList());
+
+            return orderModels
+                    .stream()
+                    .map(this::getOrderResponse)
+                    .filter(x -> x.getOrderStatus() == OrderStatus.DELIVERED)
+                    .collect(Collectors.toList());
+        }
+        // customers
+        return orderRepository.findByUserId(user.getId()).stream()
+                .map(this::getOrderResponse)
+                .filter(x -> x.getOrderStatus() == OrderStatus.DELIVERED)
+                .collect(Collectors.toList());
+    }
+
     private OrderResponse getOrderResponse(OrderModel orderModel) {
 
         OrderResponse orderResponse = new OrderResponse();
         orderResponse.setId(orderModel.getId());
         orderResponse.setOrderExternalReferenceId(orderModel.getOrderExternalReferenceId());
-        orderResponse.setOrderStatus(orderModel.getOrderStatus());
+        orderResponse.setOrderStatus(
+                OrderStatus.valueOf(orderModel.getOrderStatus()));
         orderResponse.setCreatedAt(orderModel.getCreatedAt());
         orderResponse.setModifiedAt(orderModel.getModifiedAt());
         orderResponse.setCreatedBy(orderModel.getCreatedBy());
@@ -175,7 +217,7 @@ public class OrderDAO {
         OrderModel orderModel = orderRepository.findById(request.getOrderId())
                 .orElseThrow(IllegalArgumentException::new);
 
-        orderModel.setOrderStatus(request.getOrderStatus());
+        orderModel.setOrderStatus(request.getOrderStatus().name());
         if (request.getOrderStatus() == OrderStatus.CHECKED_OUT) {
             CartModel cartModel = cartRepository.findByOrderId(request.getOrderId());
             cartModel.setStatus(CartStatus.COMPLETE.name());

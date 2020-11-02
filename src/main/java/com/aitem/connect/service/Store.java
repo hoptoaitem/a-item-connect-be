@@ -1,7 +1,9 @@
 package com.aitem.connect.service;
 
+import com.aitem.connect.model.ItemModel;
 import com.aitem.connect.model.StoreModel;
 import com.aitem.connect.model.User;
+import com.aitem.connect.request.ItemRequest;
 import com.aitem.connect.request.StoreRequest;
 import com.aitem.connect.response.OrderResponse;
 import com.aitem.connect.response.StoreResponse;
@@ -15,4 +17,8 @@ public interface Store {
     List<StoreResponse> getStores(User user);
 
     List<OrderResponse> getOrdersByStores(String storeId);
+
+    List<ItemModel> getItems(String storeId);
+
+    ItemModel createItem(ItemRequest request, String storeId );
 }

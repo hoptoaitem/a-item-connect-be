@@ -5,8 +5,8 @@ import lombok.Getter;
 public enum OrderStatus {
     IN_CART,
     CHECKED_OUT,
-    DRIVER_SEARCHING,
+    LOOKING_FOR_DRIVER,
     DRIVER_ACCEPTED,
-    CLERK_CHECKED_OUT,
+    CLERK_ASSIGNED_ORDER_TO_DRIVER,
     DELIVERED;
 }

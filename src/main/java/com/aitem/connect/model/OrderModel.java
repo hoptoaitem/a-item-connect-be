@@ -31,7 +31,8 @@ public class OrderModel implements Serializable {
 	@Column(name="order_external_ref_id")
 	private String orderExternalReferenceId;
 	@Column(name="status")
-	private OrderStatus orderStatus;
+	private String orderStatus;
+	// TO: replace with enum
 	private String storeId;
 
 	private String userId;

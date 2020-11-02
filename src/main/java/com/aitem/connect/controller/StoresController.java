@@ -1,10 +1,12 @@
 package com.aitem.connect.controller;
 
 import com.aitem.connect.model.Authentication;
+import com.aitem.connect.model.ItemModel;
 import com.aitem.connect.model.StoreModel;
 import com.aitem.connect.model.User;
 import com.aitem.connect.repository.AuthenticationRepository;
 import com.aitem.connect.repository.UserRepository;
+import com.aitem.connect.request.ItemRequest;
 import com.aitem.connect.request.StoreRequest;
 import com.aitem.connect.response.OrderResponse;
 import com.aitem.connect.response.StoreResponse;
@@ -50,10 +52,29 @@ public class StoresController {
         return service.getStores(user);
     }
 
+    @ApiOperation(value = "Get the stores for the user")
+    @GetMapping(path = "/stores/{store-id}/items", consumes = "application/json", produces = "application/json")
+    public List<ItemModel> getStoresItems(
+            @RequestHeader("api-key-token") String key,
+            @PathVariable("store-id") String storeId) {
+
+        return service.getItems(storeId);
+    }
+
+    @PostMapping(path = "/stores/{store-id}/items", consumes = "application/json", produces = "application/json")
+    public UUID createStoreItems(@RequestHeader("api-key-token") String key,
+                                 @RequestBody ItemRequest request,
+                                 @PathVariable("store-id") String storeId) {
+
+        // TODO: move this to common location
+
+        return UUID.fromString(service.createItem(request, storeId).getId());
+    }
+
     @ApiOperation(value = "Get the store orders for the user")
     @GetMapping(path = "/stores/{store-id}/orders", consumes = "application/json", produces = "application/json")
     public List<OrderResponse> getStoresOrders(@RequestHeader("api-key-token") String key,
-                                               @PathVariable ("store-id")String storeId) {
+                                               @PathVariable("store-id") String storeId) {
 
         Authentication authentication = authenticationRepository.findByToken(key);
         User user = userRepository.findById(authentication.getUserId())

@@ -1,5 +1,6 @@
 package com.aitem.connect.service.implementition;
 
+import com.aitem.connect.enums.OrderStatus;
 import com.aitem.connect.enums.ProfileType;
 import com.aitem.connect.mapper.AddressMapper;
 import com.aitem.connect.model.*;
@@ -8,6 +9,7 @@ import com.aitem.connect.repository.OrderRepository;
 import com.aitem.connect.repository.RetailerUserRepository;
 import com.aitem.connect.repository.StoreRepository;
 import com.aitem.connect.request.AddressRequest;
+import com.aitem.connect.request.ItemRequest;
 import com.aitem.connect.request.StoreRequest;
 import com.aitem.connect.response.OrderResponse;
 import com.aitem.connect.response.StoreResponse;
@@ -28,17 +30,20 @@ public class StoreService implements Store {
     private StoreRepository storeRepository;
     private AddressRepository addressRepository;
     private RetailerUserRepository retailerUserRepository;
+    private ItemDAO itemDAO;
 
     private StoreService(
             @Autowired StoreRepository storeRepository,
             @Autowired AddressRepository addressRepository,
             @Autowired RetailerUserRepository retailerUserRepository,
-            @Autowired OrderRepository orderRepository
+            @Autowired OrderRepository orderRepository,
+            @Autowired ItemDAO itemDAO
     ) {
         this.storeRepository = storeRepository;
         this.addressRepository = addressRepository;
         this.retailerUserRepository = retailerUserRepository;
         this.orderRepository = orderRepository;
+        this.itemDAO = itemDAO;
     }
 
     @Override
@@ -72,7 +77,6 @@ public class StoreService implements Store {
     }
 
 
-
     public List<StoreResponse> getStores(User user) {
 
         List<StoreModel> storeList = new ArrayList<>();
@@ -80,7 +84,7 @@ public class StoreService implements Store {
             List<RetailerUserModel> retailerUserModelList
                     = retailerUserRepository.findByUserId(user.getId());
 
-            for (RetailerUserModel item : retailerUserModelList){
+            for (RetailerUserModel item : retailerUserModelList) {
                 StoreModel model = storeRepository.findById(item.getStoreId())
                         .orElseThrow(IllegalArgumentException::new);
                 storeList.add(model);
@@ -118,7 +122,8 @@ public class StoreService implements Store {
 
                     orderResponse.setId(orderModel.getId());
                     orderResponse.setOrderExternalReferenceId(orderModel.getOrderExternalReferenceId());
-                    orderResponse.setOrderStatus(orderModel.getOrderStatus());
+                    orderResponse.setOrderStatus(
+                            OrderStatus.valueOf(orderModel.getOrderStatus()));
                     orderResponse.setCreatedAt(orderModel.getCreatedAt());
                     orderResponse.setModifiedAt(orderModel.getModifiedAt());
                     orderResponse.setCreatedBy(orderModel.getCreatedBy());
@@ -128,5 +133,15 @@ public class StoreService implements Store {
                 }).collect(Collectors.toList());
 
         return items;
+    }
+
+    @Override
+    public List<ItemModel> getItems(String storeId) {
+        return itemDAO.getItems(storeId);
+    }
+
+    @Override
+    public ItemModel createItem(ItemRequest request, String storeId) {
+        return itemDAO.createItem(request, storeId);
     }
 }
