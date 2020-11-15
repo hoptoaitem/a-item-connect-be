@@ -91,4 +91,20 @@ public class OrderController {
         OrderModel model = service.updateOrder(request, user);
         return UUID.fromString(model.getId());
     }
+
+    @ApiOperation(value = "Assign orders to the driver")
+    @PutMapping(path = "/orders/{order_id}/driver", consumes = "application/json", produces = "application/json")
+    public UUID updateOrderToDriver(@RequestHeader("api-key-token") String key,
+                            @PathVariable("order_id") String orderId,
+                            @RequestBody UpdateOrderRequest request) {
+
+        Authentication authentication = authenticationRepository.findByToken(key);
+        User user = userRepository.findById(authentication.getUserId())
+                .orElseThrow(
+                        () -> new IllegalArgumentException("User not found"));
+
+        // TODO: match orderID and request orderID
+        OrderModel model = service.updateOrder(request, user);
+        return UUID.fromString(model.getId());
+    }
 }

@@ -1,22 +1,16 @@
 package com.aitem.connect.service.implementition;
 
-import com.aitem.connect.enums.OrderStatus;
-import com.aitem.connect.enums.ProfileType;
-import com.aitem.connect.model.*;
-import com.aitem.connect.repository.*;
+import com.aitem.connect.model.OrderModel;
+import com.aitem.connect.model.User;
 import com.aitem.connect.request.OrderRequest;
 import com.aitem.connect.request.UpdateOrderRequest;
-import com.aitem.connect.response.ItemResponse;
 import com.aitem.connect.response.OrderResponse;
 import com.aitem.connect.service.Order;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderService implements Order {
@@ -48,6 +42,14 @@ public class OrderService implements Order {
 
     @Override
     public OrderModel updateOrder(UpdateOrderRequest request, User user) {
+        if(StringUtils.isNotEmpty(request.getDriverPhone())){
+            return assignOrderToDriver(request);
+        }
         return orderDAO.updateOrderStatus(request, user);
+    }
+
+    private OrderModel assignOrderToDriver(UpdateOrderRequest request) {
+
+        return orderDAO.assignOrderToDriver(request);
     }
 }

@@ -17,6 +17,7 @@ import com.aitem.connect.request.UserRequest;
 import com.aitem.connect.response.LoginResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,6 +61,12 @@ public class LoginController {
             throw new IllegalArgumentException("User not found");
         }
 
+        if (user.getProfileType().equals(ProfileType.DRIVER.name())
+                && StringUtils.isNotEmpty(request.getDeviceId())) {
+            user.setDeviceId(request.getDeviceId());
+            userRepository.save(user);
+        }
+
         try {
             // String iv, String salt, String password
             if (password.equals(crypt.decrypt(user.getIv(), user.getSalt(),
@@ -70,8 +77,8 @@ public class LoginController {
                 if (authentication == null) {
                     Authentication a = new Authentication();
                     a.setId(UUID.randomUUID().toString());
-                    a.setToken(crypt.encrypt(user.getUsername()+"-"+
-                    LocalDate.now()+"-"+UUID.randomUUID().toString()).getCipherText());
+                    a.setToken(crypt.encrypt(user.getUsername() + "-" +
+                            LocalDate.now() + "-" + UUID.randomUUID().toString()).getCipherText());
                     a.setUserId(user.getId());
                     authentication = authenticationRepository.save(a);
                 }

@@ -6,6 +6,8 @@ CREATE TABLE IF NOT EXISTS address (
     city VARCHAR(128) NOT NULL,
     zip VARCHAR(64) NOT NULL,
     state VARCHAR(24) NOT NULL,
+    lon DECIMAL,
+    lat DECIMAL,
     created_by VARCHAR(100),
     modified_by VARCHAR(100),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

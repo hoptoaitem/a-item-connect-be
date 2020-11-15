@@ -37,4 +37,6 @@ public class User implements Serializable {
 	private Date modifiedAt;
 	private String createdBy;
 	private String modifiedBy;
+
+	private String deviceId;
 }

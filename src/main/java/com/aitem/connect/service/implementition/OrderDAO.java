@@ -9,8 +9,8 @@ import com.aitem.connect.repository.*;
 import com.aitem.connect.request.OrderItemDetails;
 import com.aitem.connect.request.OrderRequest;
 import com.aitem.connect.request.UpdateOrderRequest;
-import com.aitem.connect.response.ItemResponse;
-import com.aitem.connect.response.OrderResponse;
+import com.aitem.connect.response.*;
+import com.aitem.connect.utils.NotificationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +31,7 @@ public class OrderDAO {
     private StoreRepository storeRepository;
     private RetailerUserRepository retailerUserRepository;
     private CartRepository cartRepository;
+    private NotificationUtils notificationUtils;
 
     private OrderDAO(
             @Autowired OrderRepository orderRepository,
@@ -40,7 +41,8 @@ public class OrderDAO {
             @Autowired ItemRepository itemRepository,
             @Autowired StoreRepository storeRepository,
             @Autowired RetailerUserRepository retailerUserRepository,
-            @Autowired CartRepository cartRepository
+            @Autowired CartRepository cartRepository,
+            @Autowired NotificationUtils notificationUtils
     ) {
         this.orderRepository = orderRepository;
         this.orderDetailRepository = orderDetailRepository;
@@ -50,6 +52,7 @@ public class OrderDAO {
         this.storeRepository = storeRepository;
         this.retailerUserRepository = retailerUserRepository;
         this.cartRepository = cartRepository;
+        this.notificationUtils = notificationUtils;
     }
 
     public OrderModel createOrder(OrderRequest request, User user) {
@@ -64,7 +67,7 @@ public class OrderDAO {
         ItemModel itemModel = itemRepository.findById(request.getItemDetails().stream()
                 .findAny().get().getItemId())
                 .orElseThrow(IllegalArgumentException::new);
-        ;
+
         model.setStoreId(itemModel.getStoreId());
 
         final OrderModel savedModel = orderRepository.save(model);
@@ -89,6 +92,7 @@ public class OrderDAO {
     public List<OrderResponse> getOrder(User user) {
         if (user.getProfileType().equals(ProfileType.DRIVER.name())) {
             return orderRepository.findByDriverId(user.getId()).stream()
+                    .filter(x -> !x.getOrderStatus().equals(OrderStatus.DELIVERED.name()))
                     .map(this::getOrderResponse)
                     .collect(Collectors.toList());
         }
@@ -174,16 +178,32 @@ public class OrderDAO {
                 .orElseThrow(IllegalArgumentException::new);
         AddressModel destination = addressRepository.findById(customer.getAddressId())
                 .orElseThrow(IllegalArgumentException::new);
-        orderResponse.setDestination(destination);
+        orderResponse.setCustomerAddress(destination);
 
         StoreModel storeModel = storeRepository.findById(orderModel.getStoreId())
                 .orElseThrow(IllegalArgumentException::new);
 
         AddressModel origin = addressRepository.findById(storeModel.getAddressId())
                 .orElseThrow(IllegalArgumentException::new);
-        orderResponse.setDestination(origin);
+        orderResponse.setShopAddress(origin);
+
+        // TODO: break to methods
+        Contact contact = new Contact();
+
+        Retailor retailor = new Retailor();
+        Shopper shopper = new Shopper();
+
+        retailor.setEmail(storeModel.getEmail());
+        retailor.setPhone(storeModel.getPhoneNo());
+
+        shopper.setEmail(customer.getEmail());
+        shopper.setPhone(customer.getPhone());
+
+        contact.setRetailor(retailor);
+        contact.setShopper(shopper);
 
 
+        orderResponse.setContact(contact);
         List<ItemResponse> items = orderDetailRepository.
                 findByOrderId(orderModel.getId()).stream()
                 .map(this::getItemResponse).
@@ -224,5 +244,22 @@ public class OrderDAO {
             cartRepository.save(cartModel);
         }
         return orderRepository.save(orderModel);
+    }
+
+    public OrderModel assignOrderToDriver(UpdateOrderRequest request) {
+
+        // TODO: profile type and ph unique contraint
+        User user = userRepository.findByPhone(request.getDriverPhone());
+
+        OrderModel orderModel = orderRepository.findById(request.getOrderId())
+                .orElseThrow(IllegalArgumentException::new);
+
+        orderModel.setDriverId(user.getId());
+
+        orderRepository.save(orderModel);
+
+        notificationUtils.sendNotification(user);
+
+        return orderModel;
     }
 }

@@ -25,9 +25,9 @@ public class OrderResponse {
     private String modifiedBy;
 
     // origin
-    private AddressModel origin;
+    private AddressModel shopAddress;
     // destination
-    private AddressModel destination;
+    private AddressModel customerAddress;
 
 
     List<ItemResponse> items;

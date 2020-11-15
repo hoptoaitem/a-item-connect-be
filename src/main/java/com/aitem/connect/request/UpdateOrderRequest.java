@@ -12,4 +12,6 @@ public class UpdateOrderRequest implements Serializable {
 
 	private String orderId;
 	private OrderStatus orderStatus;
+
+	private String driverPhone;
 }

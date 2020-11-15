@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS user (
     iv VARCHAR(24) NOT NULL,
     salt VARCHAR(44) NOT NULL,
     profile_type VARCHAR(44) NOT NULL,
+    device_id VARCHAR(2000),
     address_id VARCHAR(128),
     created_by VARCHAR(100),
     modified_by VARCHAR(100),
