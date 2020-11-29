@@ -1,23 +1,16 @@
 package com.aitem.connect.controller;
 
 import com.aitem.connect.model.Authentication;
-import com.aitem.connect.model.ItemModel;
 import com.aitem.connect.model.User;
 import com.aitem.connect.repository.AuthenticationRepository;
 import com.aitem.connect.repository.UserRepository;
 import com.aitem.connect.request.CartRequest;
-import com.aitem.connect.request.ItemRequest;
-import com.aitem.connect.request.OrderRequest;
 import com.aitem.connect.response.CartResponse;
 import com.aitem.connect.service.implementition.CartService;
-import com.aitem.connect.service.implementition.ItemService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
 
 @Api(tags = "Cart API")
 @CrossOrigin

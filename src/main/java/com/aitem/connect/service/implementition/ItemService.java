@@ -98,7 +98,7 @@ public class ItemService implements Item {
                     .collect(Collectors.toList());
         }
 
-        if (user.getProfileType().equals(ProfileType.CUSTOMER.name())) {
+        if (user.getProfileType().equals(ProfileType.SHOPPER.name())) {
 
             return itemRepository.findAll();
         }

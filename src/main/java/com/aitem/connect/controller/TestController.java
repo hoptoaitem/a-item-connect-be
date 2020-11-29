@@ -4,23 +4,12 @@ import com.aitem.connect.model.Authentication;
 import com.aitem.connect.model.User;
 import com.aitem.connect.repository.AuthenticationRepository;
 import com.aitem.connect.repository.UserRepository;
-import com.aitem.connect.request.ItemRequest;
 import com.aitem.connect.service.implementition.ItemService;
 import com.aitem.connect.utils.NotificationUtils;
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingException;
-import com.google.firebase.messaging.Message;
-import com.google.firebase.messaging.Notification;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.UUID;
 
 @Api(tags = "Item")

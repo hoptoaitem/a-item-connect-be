@@ -107,7 +107,7 @@ public class LoginController {
         user.setSalt(new String(a.getSalt()));
         user.setPass(a.getCipherText());
         user.setUsername(request.getUsername());
-        if (request.getProfileType().equals(ProfileType.CUSTOMER)) {
+        if (request.getProfileType().equals(ProfileType.SHOPPER)) {
             user.setStatus(UserStatus.APPROVED.name());
         } else {
             user.setStatus(UserStatus.SUBMITTED.name());

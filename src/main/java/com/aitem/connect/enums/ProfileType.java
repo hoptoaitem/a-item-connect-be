@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum ProfileType {
     DRIVER("DRIVER"),
     RETAILER("RETAILER"),
-    CUSTOMER("CUSTOMER"),
+    SHOPPER("SHOPPER"),
     NOT_DECIDED("NOT_DECIDED");
 
     private String code;
