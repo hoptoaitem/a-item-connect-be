@@ -10,12 +10,16 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.util.ResourceUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+@EnableAsync
 @SpringBootApplication
 public class AitemConnectApplication {
 
@@ -57,5 +61,15 @@ public class AitemConnectApplication {
                 .build();
 
         return FirebaseMessaging.getInstance(FirebaseApp.initializeApp(options));
+    }
+
+    @Bean("threadPoolTaskExecutor")
+    public TaskExecutor getAsyncExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(2);
+        executor.setMaxPoolSize(2);
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.setThreadNamePrefix("Async-");
+        return executor;
     }
 }

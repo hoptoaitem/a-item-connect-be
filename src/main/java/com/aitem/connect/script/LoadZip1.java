@@ -4,6 +4,7 @@ import com.aitem.connect.model.Zip;
 import com.aitem.connect.repository.ZipBulkRepository;
 import com.aitem.connect.repository.ZipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -13,41 +14,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class LoadZip {
+public class LoadZip1 {
 
     private ZipBulkRepository zipBulkRepository;
     private ZipRepository zipRepository;
 
-    private LoadZip(
+    public LoadZip1(
             @Autowired ZipBulkRepository zipBulkRepository,
             @Autowired ZipRepository zipRepository
     ) {
         this.zipBulkRepository = zipBulkRepository;
         this.zipRepository = zipRepository;
-/*
-        try {
-            loadZip();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
- */
     }
 
-    public void loadZip() throws IOException {
+    @Async("threadPoolTaskExecutor")
+    public void loadZip() {
 
         List<Zip> zipList = new ArrayList<>();
         BufferedReader reader;
         try {
-            /*
-            reader = new BufferedReader(new FileReader(
-                    "/Users/achyutneupane/" +
-                            "Downloads/a-item-connect-be" +
-                            "/src/main/resources/sql_queries/test.txt"));
-             */
 
             reader = new BufferedReader(new FileReader(
-                    "src/main/resources/sql_queries/test2.txt"));
+                    "/tmp/zip.txt"));
 
             String line = reader.readLine();
             int count = 0;
@@ -58,22 +46,6 @@ public class LoadZip {
                 if (line != null && !line.isEmpty()) {
                     String[] allItems = line.split(";");
                     if (allItems.length >= 5) {
-                        //Zip;City;State;Latitude;Longitude;Timezone;Daylight savings time flag;geopoint
-                        //85743;Tucson;AZ;32.335122;-111.14888;-7;0;32.335122,-111.14888
-                        /*
-                        writeToFile(
-                                String.format(
-                                        "insert into zip (zip, city, state, lon ,lat)" +
-                                                " values ('%s','%s','%s','%s','%s');",
-                                        allItems[0],
-                                        allItems[1],
-                                        allItems[2],
-                                        allItems[3],
-                                        allItems[4]
-                                ));
-                        writeToFile("\n");
-                        writeToFile("commit;");
-                         */
                         Zip item = new Zip();
 
                         item.setZip(allItems[0]);
@@ -97,25 +69,5 @@ public class LoadZip {
             e.printStackTrace();
         }
         zipBulkRepository.batchInsert(zipList, 100);
-    }
-
-    /*
-    private  static void writeToFile(String output){
-        String str = "World";
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new FileWriter("/Users/achyutneupane/" +
-                    "Downloads/a-item-connect-be" +
-                    "/src/main/resources/sql_queries/output.txt", true));
-            writer.append(output);
-            writer.append('\n');
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-*/
-    public static void main(String[] args) {
-        //loadZip();
     }
 }

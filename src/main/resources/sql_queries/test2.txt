@@ -1,4 +1,3 @@
-Zip;City;State;Latitude;Longitude;Timezone;Daylight savings time flag;geopoint
 48834;Fenwick;MI;43.141649;-85.04948;-5;1;43.141649,-85.04948
 55304;Andover;MN;45.254715;-93.28652;-6;1;45.254715,-93.28652
 55422;Minneapolis;MN;45.014764;-93.33965;-6;1;45.014764,-93.33965
