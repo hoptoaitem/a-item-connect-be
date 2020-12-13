@@ -1,11 +1,12 @@
 package com.aitem.connect.service;
 
 import com.aitem.connect.model.User;
+import com.aitem.connect.response.PictureResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
 public interface Picture {
 
-    public UUID upload(MultipartFile request, User user);
+    PictureResponse upload(MultipartFile request, User user);
 }

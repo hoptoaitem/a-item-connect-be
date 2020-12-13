@@ -1,8 +1,8 @@
-CREATE TABLE IF NOT EXISTS zip_neighbour (
+CREATE TABLE IF NOT EXISTS zip_driver (
     id VARCHAR(128) PRIMARY KEY,
     zip VARCHAR(128) NOT NULL,
     driver_id VARCHAR(128) NOT NULL,
-    distance VARCHAR(24) NOT NULL,
+    distance VARCHAR(24),
     created_by VARCHAR(100),
     modified_by VARCHAR(100),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

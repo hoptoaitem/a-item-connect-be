@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS item (
   created_by VARCHAR(100),
   modified_by VARCHAR(100),
   picture_id VARCHAR(100),
+  picture_url VARCHAR(1000),
   external_ref_id VARCHAR(128) NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   modified_at DATETIME DEFAULT CURRENT_TIMESTAMP

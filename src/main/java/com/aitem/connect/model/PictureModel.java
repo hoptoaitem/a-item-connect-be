@@ -23,6 +23,7 @@ public class PictureModel {
 	private String id;
 	private String path;
 	private String originalFileName;
+	private String url;
 
 	private Date createdAt;
 	private Date modifiedAt;

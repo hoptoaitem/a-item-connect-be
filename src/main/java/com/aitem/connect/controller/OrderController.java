@@ -76,7 +76,7 @@ public class OrderController {
         return UUID.fromString(model.getId());
     }
 
-    @ApiOperation(value = "Created the orders for the store")
+    @ApiOperation(value = "Update orders for the store")
     @PutMapping(path = "/orders/{order_id}", consumes = "application/json", produces = "application/json")
     public UUID updateOrder(@RequestHeader("api-key-token") String key,
                             @PathVariable("order_id") String orderId,
@@ -95,8 +95,8 @@ public class OrderController {
     @ApiOperation(value = "Assign orders to the driver")
     @PutMapping(path = "/orders/{order_id}/driver", consumes = "application/json", produces = "application/json")
     public UUID updateOrderToDriver(@RequestHeader("api-key-token") String key,
-                            @PathVariable("order_id") String orderId,
-                            @RequestBody UpdateOrderRequest request) {
+                                    @PathVariable("order_id") String orderId,
+                                    @RequestBody UpdateOrderRequest request) {
 
         Authentication authentication = authenticationRepository.findByToken(key);
         User user = userRepository.findById(authentication.getUserId())

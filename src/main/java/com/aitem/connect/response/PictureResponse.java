@@ -12,4 +12,5 @@ public class PictureResponse {
     private String id;
     private String originalFileName;
     private String content;
+    private String url;
 }

@@ -5,6 +5,7 @@ import com.aitem.connect.enums.OrderStatus;
 import com.aitem.connect.enums.ProfileType;
 import com.aitem.connect.helper.AitemConnectHelper;
 import com.aitem.connect.model.*;
+import com.aitem.connect.processor.OrderProcessor;
 import com.aitem.connect.repository.*;
 import com.aitem.connect.request.OrderItemDetails;
 import com.aitem.connect.request.OrderRequest;
@@ -32,6 +33,7 @@ public class OrderDAO {
     private RetailerUserRepository retailerUserRepository;
     private CartRepository cartRepository;
     private NotificationUtils notificationUtils;
+    private OrderProcessor orderProcessor;
 
     private OrderDAO(
             @Autowired OrderRepository orderRepository,
@@ -42,7 +44,8 @@ public class OrderDAO {
             @Autowired StoreRepository storeRepository,
             @Autowired RetailerUserRepository retailerUserRepository,
             @Autowired CartRepository cartRepository,
-            @Autowired NotificationUtils notificationUtils
+            @Autowired NotificationUtils notificationUtils,
+            @Autowired OrderProcessor orderProcessor
     ) {
         this.orderRepository = orderRepository;
         this.orderDetailRepository = orderDetailRepository;
@@ -53,6 +56,7 @@ public class OrderDAO {
         this.retailerUserRepository = retailerUserRepository;
         this.cartRepository = cartRepository;
         this.notificationUtils = notificationUtils;
+        this.orderProcessor = orderProcessor;
     }
 
     public OrderModel createOrder(OrderRequest request, User user) {
@@ -243,6 +247,19 @@ public class OrderDAO {
             cartModel.setStatus(CartStatus.COMPLETE.name());
             cartRepository.save(cartModel);
         }
+
+        if (request.getOrderStatus() == OrderStatus.DRIVER_ACCEPTED
+                && orderModel.getDriverId().equals(user.getId())) {
+            orderModel.setOrderStatus(OrderStatus.DRIVER_ACCEPTED.name());
+        } else if (request.getOrderStatus() == OrderStatus.DRIVER_ACCEPTED
+                && !orderModel.getDriverId().equals(user.getId())) {
+            throw new IllegalStateException("Order Expired");
+        }
+
+        if (request.getOrderStatus() == OrderStatus.PAYMENT_SUCCESSFUL) {
+            orderProcessor.handleDriverForOrder(orderModel);
+        }
+
         return orderRepository.save(orderModel);
     }
 
@@ -253,11 +270,9 @@ public class OrderDAO {
 
         OrderModel orderModel = orderRepository.findById(request.getOrderId())
                 .orElseThrow(IllegalArgumentException::new);
-
         orderModel.setDriverId(user.getId());
-
+        orderModel.setOrderStatus(OrderStatus.WAITING_ACCEPTANCE_FROM_DRIVER.name());
         orderRepository.save(orderModel);
-
         notificationUtils.sendNotification(user);
 
         return orderModel;

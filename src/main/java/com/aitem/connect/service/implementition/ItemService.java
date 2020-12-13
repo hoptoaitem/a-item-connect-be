@@ -75,6 +75,7 @@ public class ItemService implements Item {
         model.setPictureId(request.getPictureId());
         model.setExternalRefId(
                 String.valueOf(AitemConnectHelper.getRandomNumber(8)));
+        model.setPictureUrl(request.getPictureUrl());
         return model;
     }
 

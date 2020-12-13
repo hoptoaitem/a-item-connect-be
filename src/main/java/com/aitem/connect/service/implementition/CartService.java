@@ -144,7 +144,18 @@ public class CartService implements Cart {
             response.setItems(orderDetails.stream()
                     .map(this::getItemResponse).collect(Collectors.toList()));
         }
+        String total = getTotal(response.getItems());
+        response.setTotal(total);
         return response;
+    }
+
+    private String getTotal(List<ItemResponse> items) {
+        return String.valueOf(
+                items.stream()
+                        .map(item ->
+                                Long.valueOf(item.getPrice()) * item.getQuantity())
+                        .mapToLong(Long::longValue)
+                        .sum());
     }
 
     private ItemResponse getItemResponse(OrderDetailsModel orderDetailsModel) {

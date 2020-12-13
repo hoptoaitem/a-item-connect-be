@@ -53,7 +53,7 @@ public class PictureController {
 
     // TODO : pass as list
     @PostMapping(path = "/pictures")
-    public UUID upload(@RequestHeader("api-key-token") String key,
+    public PictureResponse upload(@RequestHeader("api-key-token") String key,
                        @RequestParam("file") MultipartFile file) {
 
         // TODO: move this to common location

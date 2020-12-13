@@ -6,10 +6,7 @@ import com.aitem.connect.repository.*;
 import com.aitem.connect.response.PictureResponse;
 import com.aitem.connect.service.Picture;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,7 +33,6 @@ public class PictureService implements Picture {
     private OrderDAO orderDAO;
     private AmazonS3 s3Client;
 
-
     private PictureService(
             @Autowired AmazonS3 s3Client,
             @Autowired PictureRepository pictureRepository,
@@ -62,32 +58,36 @@ public class PictureService implements Picture {
     }
 
     @Override
-    public UUID upload(MultipartFile file, User user) {
+    public PictureResponse upload(MultipartFile file, User user) {
 
-
+        PictureResponse response = new PictureResponse();
         String text = null;
         try {
             // TODO: make S3 read only access
             String bucketName = "a-item-connect-dev";
             String fileObjKeyName = (file.getName() + "_" + ZonedDateTime.now())
                     .replaceAll("[^\\p{IsAlphabetic}\\p{IsDigit}]", "");
-            fileObjKeyName = "pictures/" + fileObjKeyName;
+            fileObjKeyName = "pictures/" + fileObjKeyName + "/" + file.getOriginalFilename()
+                    .replace(" ", "");
             ObjectMetadata metadata = new ObjectMetadata();
             PutObjectRequest request = new PutObjectRequest(bucketName, fileObjKeyName,
                     file.getInputStream(), metadata);
             s3Client.putObject(request);
+            String path = s3Client.getUrl(bucketName, fileObjKeyName).toExternalForm();
 
             PictureModel model = new PictureModel();
             model.setId(UUID.randomUUID().toString());
             model.setOriginalFileName(file.getOriginalFilename());
             model.setPath(fileObjKeyName);
+            model.setUrl(path);
             model = pictureRepository.save(model);
-            return UUID.fromString(model.getId());
+            response.setId(model.getId());
+            response.setUrl(path);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return null;
+        return response;
     }
 
     public PictureResponse getPictureDetails(String pictureId, User user) {
@@ -99,10 +99,8 @@ public class PictureService implements Picture {
             S3Object fullObject
                     = s3Client.getObject(new GetObjectRequest(bucketName, model.getPath()));
 
-
             String base64Image = Base64.getEncoder()
                     .encodeToString(fullObject.getObjectContent().readAllBytes());
-
 
             PictureResponse response = new PictureResponse();
             response.setId(pictureId);

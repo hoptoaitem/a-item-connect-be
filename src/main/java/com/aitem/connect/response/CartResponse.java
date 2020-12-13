@@ -14,4 +14,6 @@ public class CartResponse {
     private String orderId;
 
     List<ItemResponse> items;
+
+    private String total;
 }
