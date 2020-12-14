@@ -30,8 +30,7 @@ public class CartService implements Cart {
     private StoreRepository storeRepository;
     private RetailerUserRepository retailerUserRepository;
     private OrderDAO orderDAO;
-
-
+    
     private CartService(
             @Autowired OrderDAO orderDAO,
             @Autowired CartRepository cartRepository,

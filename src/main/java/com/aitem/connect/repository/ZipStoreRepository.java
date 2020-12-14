@@ -12,4 +12,5 @@ import java.util.List;
 @Repository
 public interface ZipStoreRepository extends JpaRepository<ZipStore, String> {
 
+    List<ZipStore> findByZip(@Param("zip")String zip);
 }

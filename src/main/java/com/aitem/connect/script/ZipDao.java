@@ -111,7 +111,7 @@ public class ZipDao {
                             allNeghbour.forEach(item -> {
                                 ZipStore zipStoreItem = new ZipStore();
                                 zipStoreItem.setId(UUID.randomUUID().toString());
-                                zipStoreItem.setZip(addressModel.getZip());
+                                zipStoreItem.setZip(item.getZip());
                                 zipStoreItem.setStoreId(store.getId());
                                 // TODO add distance later after google map calculation
                                 zipStoreRepository.save(zipStoreItem);

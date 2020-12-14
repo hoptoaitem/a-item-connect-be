@@ -31,19 +31,22 @@ public class StoreService implements Store {
     private AddressRepository addressRepository;
     private RetailerUserRepository retailerUserRepository;
     private ItemDAO itemDAO;
+    private StoreDAO storeDAO;
 
     private StoreService(
             @Autowired StoreRepository storeRepository,
             @Autowired AddressRepository addressRepository,
             @Autowired RetailerUserRepository retailerUserRepository,
             @Autowired OrderRepository orderRepository,
-            @Autowired ItemDAO itemDAO
+            @Autowired ItemDAO itemDAO,
+            @Autowired StoreDAO storeDAO
     ) {
         this.storeRepository = storeRepository;
         this.addressRepository = addressRepository;
         this.retailerUserRepository = retailerUserRepository;
         this.orderRepository = orderRepository;
         this.itemDAO = itemDAO;
+        this.storeDAO = storeDAO;
     }
 
     @Override
@@ -90,7 +93,8 @@ public class StoreService implements Store {
                 storeList.add(model);
             }
         } else {
-            storeList.addAll(storeRepository.findAll());
+            //storeList.addAll(storeRepository.findAll());
+            storeList.addAll(storeDAO.getStoreForUser(user));
         }
         return storeList.stream().map(this::getStoreResponse).collect(Collectors.toList());
     }

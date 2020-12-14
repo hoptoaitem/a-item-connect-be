@@ -259,22 +259,6 @@ public class OrderDAO {
         if (request.getOrderStatus() == OrderStatus.PAYMENT_SUCCESSFUL) {
             orderProcessor.handleDriverForOrder(orderModel);
         }
-
         return orderRepository.save(orderModel);
-    }
-
-    public OrderModel assignOrderToDriver(UpdateOrderRequest request) {
-
-        // TODO: profile type and ph unique contraint
-        User user = userRepository.findByPhone(request.getDriverPhone());
-
-        OrderModel orderModel = orderRepository.findById(request.getOrderId())
-                .orElseThrow(IllegalArgumentException::new);
-        orderModel.setDriverId(user.getId());
-        orderModel.setOrderStatus(OrderStatus.WAITING_ACCEPTANCE_FROM_DRIVER.name());
-        orderRepository.save(orderModel);
-        notificationUtils.sendNotification(user);
-
-        return orderModel;
     }
 }

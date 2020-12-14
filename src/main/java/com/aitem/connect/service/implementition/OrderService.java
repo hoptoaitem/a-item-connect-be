@@ -17,12 +17,15 @@ public class OrderService implements Order {
 
 
     private OrderDAO orderDAO;
+    private OrderDriverDAO orderDriverDAO;
 
 
     private OrderService(
-            @Autowired OrderDAO orderDAO
+            @Autowired OrderDAO orderDAO,
+            @Autowired OrderDriverDAO orderDriverDAO
     ) {
         this.orderDAO = orderDAO;
+        this.orderDriverDAO=orderDriverDAO;
     }
 
     @Override
@@ -49,7 +52,6 @@ public class OrderService implements Order {
     }
 
     private OrderModel assignOrderToDriver(UpdateOrderRequest request) {
-
-        return orderDAO.assignOrderToDriver(request);
+        return orderDriverDAO.assignOrderToDriver(request);
     }
 }

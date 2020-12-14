@@ -3,57 +3,45 @@ package com.aitem.connect.processor;
 import com.aitem.connect.enums.OrderStatus;
 import com.aitem.connect.model.*;
 import com.aitem.connect.repository.*;
-import com.aitem.connect.request.ItemRequest;
 import com.aitem.connect.request.UpdateOrderRequest;
 import com.aitem.connect.service.implementition.OrderDAO;
+import com.aitem.connect.service.implementition.OrderDriverDAO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
 public class OrderProcessor {
 
 
-    private CartRepository cartRepository;
     private OrderRepository orderRepository;
-    private OrderDetailRepository orderDetailRepository;
     private AddressRepository addressRepository;
     private UserRepository userRepository;
-    private ItemRepository itemRepository;
     private StoreRepository storeRepository;
-    private RetailerUserRepository retailerUserRepository;
-    private OrderDAO orderDAO;
+    private OrderDriverDAO orderDriverDAO;
     private ZipDriverRepository zipDriverRepository;
 
-    private OrderProcessor(
-            @Autowired CartRepository cartRepository,
+    public OrderProcessor(
             @Autowired OrderRepository orderRepository,
-            @Autowired OrderDetailRepository orderDetailRepository,
             @Autowired AddressRepository addressRepository,
             @Autowired UserRepository userRepository,
-            @Autowired ItemRepository itemRepository,
             @Autowired StoreRepository storeRepository,
-            @Autowired RetailerUserRepository retailerUserRepository,
             @Autowired ZipDriverRepository zipDriverRepository,
-            @Autowired OrderDAO orderDAO
+            @Autowired OrderDriverDAO orderDriverDAO
     ) {
         this.orderRepository = orderRepository;
-        this.orderDetailRepository = orderDetailRepository;
         this.addressRepository = addressRepository;
         this.userRepository = userRepository;
-        this.itemRepository = itemRepository;
         this.storeRepository = storeRepository;
-        this.retailerUserRepository = retailerUserRepository;
-        this.cartRepository = cartRepository;
-        this.orderDAO = orderDAO;
+        this.orderDriverDAO = orderDriverDAO;
         this.zipDriverRepository = zipDriverRepository;
-        this.orderDAO = orderDAO;
     }
 
+    @Async("threadPoolTaskExecutor")
     public void handleDriverForOrder(OrderModel orderModel) {
 
         StoreModel storeModel = storeRepository.findById(orderModel.getStoreId())
@@ -86,7 +74,7 @@ public class OrderProcessor {
                 UpdateOrderRequest request = new UpdateOrderRequest();
                 request.setDriverPhone(user.getPhone());
                 request.setOrderId(orderModel.getId());
-                orderDAO.assignOrderToDriver(request);
+                orderDriverDAO.assignOrderToDriver(request);
                 try {
                     Thread.sleep(1000 * 120);
                 } catch (InterruptedException e) {
