@@ -93,8 +93,8 @@ public class StoreService implements Store {
                 storeList.add(model);
             }
         } else {
-            //storeList.addAll(storeRepository.findAll());
-            storeList.addAll(storeDAO.getStoreForUser(user));
+            storeList.addAll(storeRepository.findAll());
+            //storeList.addAll(storeDAO.getStoreForUser(user));
         }
         return storeList.stream().map(this::getStoreResponse).collect(Collectors.toList());
     }
