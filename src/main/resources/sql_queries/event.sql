@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS event (
+    id VARCHAR(128) PRIMARY KEY,
+    name VARCHAR(128),
+    created_by VARCHAR(100),
+    modified_by VARCHAR(100),
+    status INTEGER NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    modified_at DATETIME DEFAULT CURRENT_TIMESTAMP
+)
