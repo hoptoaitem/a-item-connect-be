@@ -50,8 +50,7 @@ public class EventService implements Event {
         eventModel.setName(request.getEventName());
         eventModel.setCreatedBy(user.getId());
         eventModel.setModifiedBy(user.getId());
-        eventRepository.save(eventModel);
-        //eventModel = eventRepository.save(eventModel);
+        eventModel = eventRepository.save(eventModel);
         return eventModel;
     }
 
