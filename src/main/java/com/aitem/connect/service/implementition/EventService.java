@@ -44,11 +44,11 @@ public class EventService implements Event {
     }
 
     @Override
-    public EventModel createStore(StoreRequest request, User user) {
-        EventModel eventModel = new StoreModel();
+    public EventModel createEvent(EventRequest request, User user) {
+        EventModel eventModel = new EventModel();
         eventModel.setId(UUID.randomUUID().toString());
         eventModel.setEventName(request.getEventName());
-        eventModel = storeRepository.save(eventModel);
+        eventModel = eventRepository.save(eventModel);
         return eventModel;
     }
 
