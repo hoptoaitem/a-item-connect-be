@@ -51,7 +51,7 @@ public class EventController {
 
     @ApiOperation(value = "Get the events for the user")
     @GetMapping(path = "/events", consumes = "application/json", produces = "application/json")
-    public List<EventResponse> getEvents(@RequestHeader("api-key-token") String key) {
+    public List<EventModel> getEvents(@RequestHeader("api-key-token") String key) {
         Authentication authentication = authenticationRepository.findByToken(key);
         User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
         return service.getEvents(user);
