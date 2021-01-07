@@ -48,7 +48,7 @@ public class EventService implements Event {
         EventModel eventModel = new EventModel();
         eventModel.setId(UUID.randomUUID().toString());
         eventModel.setName(request.getEventName());
-        eventModel = eventRepository.save(eventModel);
+        //eventModel = eventRepository.save(eventModel);
         return eventModel;
     }
 
