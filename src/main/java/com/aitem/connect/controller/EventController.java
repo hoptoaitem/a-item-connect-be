@@ -41,7 +41,7 @@ public class EventController {
 
     @ApiOperation(value = "Create the event for the submitted request")
     @PostMapping(path = "/event", consumes = "application/json", produces = "application/json")
-    public UUID createEvent(@RequestHeader("api-key-token") String key,
+    public EventModel createEvent(@RequestHeader("api-key-token") String key,
                             @RequestBody EventRequest request) {
         Authentication authentication = authenticationRepository.findByToken(key);
         User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
