@@ -7,6 +7,7 @@ public enum ProfileType {
     DRIVER("DRIVER"),
     RETAILER("RETAILER"),
     SHOPPER("SHOPPER"),
+    ADMIN("ADMIN"),
     NOT_DECIDED("NOT_DECIDED");
 
     private String code;
