@@ -41,13 +41,12 @@ public class EventController {
 
     @ApiOperation(value = "Create the event for the submitted request")
     @PostMapping(path = "/event", consumes = "application/json", produces = "application/json")
-    public EventModel createEvent(@RequestHeader("api-key-token") String key,
+    public UUID createEvent(@RequestHeader("api-key-token") String key,
                             @RequestBody EventRequest request) {
         Authentication authentication = authenticationRepository.findByToken(key);
         User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
         EventModel model = service.createEvent(request, user);
-        //return UUID.fromString(model.getId());
-        return model;
+        return UUID.fromString(model.getId());
     }
 
     // public List<StoreResponse> getStores(@RequestHeader("api-key-token") String key) {
