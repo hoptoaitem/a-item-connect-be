@@ -46,10 +46,6 @@ public class EventService implements Event {
     }
 
     public List<EventModel> getEvents(User user) {
-        if (user.getProfileType().equals(ProfileType.ADMIN.name())) {
-            return eventRepository.findByCreatorId(user.getId());
-        } else {
-            return null;
-        }
+        return eventRepository.findByCreatorId(user.getId());
     }
 }
