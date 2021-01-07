@@ -4,16 +4,7 @@ import com.aitem.connect.repository.EventRepository;
 import com.aitem.connect.request.EventRequest;
 import com.aitem.connect.response.EventResponse;
 import com.aitem.connect.model.*;
-
-// import com.aitem.connect.enums.OrderStatus;
-// import com.aitem.connect.enums.ProfileType;
-// import com.aitem.connect.mapper.AddressMapper;
-// import com.aitem.connect.repository.AddressRepository;
-// import com.aitem.connect.repository.OrderRepository;
-// import com.aitem.connect.repository.RetailerUserRepository;
-// import com.aitem.connect.request.AddressRequest;
-// import com.aitem.connect.request.ItemRequest;
-// import com.aitem.connect.response.OrderResponse;
+import com.aitem.connect.enums.ProfileType;
 import com.aitem.connect.service.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
