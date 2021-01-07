@@ -46,7 +46,8 @@ public class EventController {
         Authentication authentication = authenticationRepository.findByToken(key);
         User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
         EventModel model = service.createEvent(request, user);
-        return UUID.fromString(model.getId());
+        //return UUID.fromString(model.getId());
+        return model;
     }
 
     // public List<StoreResponse> getStores(@RequestHeader("api-key-token") String key) {
