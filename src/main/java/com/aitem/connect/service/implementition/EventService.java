@@ -33,11 +33,7 @@ public class EventService implements Event {
     // private StoreDAO storeDAO;
 
     private EventService(
-            @Autowired EventRepository eventRepository,
-            // @Autowired RetailerUserRepository retailerUserRepository,
-            // @Autowired OrderRepository orderRepository,
-            // @Autowired ItemDAO itemDAO,
-            // @Autowired StoreDAO storeDAO
+        @Autowired EventRepository eventRepository
     ) {
         this.eventRepository = eventRepository;
         // this.addressRepository = addressRepository;
