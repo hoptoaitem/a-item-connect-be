@@ -6,5 +6,5 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface EventRepository extends JpaRepository<EventModel, String> {
-	//List<EventModel> findByCreatorId(@Param("createdBy") String createdBy);
+	List<EventModel> findByCreatedBy(@Param("createdBy") String createdBy);
 }
