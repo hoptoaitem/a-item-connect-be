@@ -56,6 +56,17 @@ public class EventService implements Event {
             }
         } else {
             return -1;
-        }   
+        }
+    }
+
+    public EventModel updateCart(User user, String eventId, Integer status) {
+        if (user.getProfileType().equals(ProfileType.ADMIN.name())) {
+            EventModel event = eventRepository.findById(eventId);
+            event.setStatus(status);
+            event = eventRepository.save(event);
+            return event;
+        } else {
+            return null;
+        }
     }
 }

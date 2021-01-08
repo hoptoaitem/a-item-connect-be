@@ -59,4 +59,20 @@ public class EventController {
         User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
         return service.deleteEvent(user, eventId);
     }
+
+    @ApiOperation(value = "Start event for the user")
+    @PutMapping(path = "/event/{event-id}/start", consumes = "application/json", produces = "application/json")
+    public EventModel startEvent(@RequestHeader("api-key-token") String key, @PathVariable("event-id") String eventId) {
+        Authentication authentication = authenticationRepository.findByToken(key);
+        User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return service.updateCart(user, eventId, 1);
+    }
+
+    @ApiOperation(value = "Stop event for the user")
+    @PutMapping(path = "/event/{event-id}/stop", consumes = "application/json", produces = "application/json")
+    public EventModel stopEvent(@RequestHeader("api-key-token") String key, @PathVariable("event-id") String eventId) {
+        Authentication authentication = authenticationRepository.findByToken(key);
+        User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return service.updateCart(user, eventId, 2);
+    }
 }

@@ -9,4 +9,5 @@ public interface Event {
     EventModel createEvent(EventRequest request, User user);
     List<EventModel> getEvents(User user);
     Integer deleteEvent(User user, String eventId);
+    EventModel updateCart(User user, String eventId, Integer status);
 }
