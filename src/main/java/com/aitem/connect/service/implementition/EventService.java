@@ -46,7 +46,7 @@ public class EventService implements Event {
         }
     }
 
-    public Integer deleteEvent(String eventId) {
+    public Integer deleteEvent(User user, String eventId) {
         if (user.getProfileType().equals(ProfileType.ADMIN.name())) {
             try {
                 eventRepository.deleteById(eventId);
