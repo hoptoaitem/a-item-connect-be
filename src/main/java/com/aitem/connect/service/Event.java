@@ -8,4 +8,5 @@ import java.util.List;
 public interface Event {
     EventModel createEvent(EventRequest request, User user);
     List<EventModel> getEvents(User user);
+    Integer deleteEvent(String eventId);
 }

@@ -18,20 +18,11 @@ import java.util.stream.Collectors;
 @Service
 public class EventService implements Event {
     private EventRepository eventRepository;
-    // private OrderRepository orderRepository;
-    // private RetailerUserRepository retailerUserRepository;
-    // private ItemDAO itemDAO;
-    // private StoreDAO storeDAO;
 
     private EventService(
         @Autowired EventRepository eventRepository
     ) {
         this.eventRepository = eventRepository;
-        // this.addressRepository = addressRepository;
-        // this.retailerUserRepository = retailerUserRepository;
-        // this.orderRepository = orderRepository;
-        // this.itemDAO = itemDAO;
-        // this.storeDAO = storeDAO;
     }
 
     @Override
@@ -41,6 +32,8 @@ public class EventService implements Event {
         eventModel.setName(request.getEventName());
         eventModel.setCreatedBy(user.getId());
         eventModel.setModifiedBy(user.getId());
+        eventModel.setCreatedAt(new Date());
+        eventModel.setModifiedAt(new Date());
         eventModel = eventRepository.save(eventModel);
         return eventModel;
     }
@@ -51,5 +44,18 @@ public class EventService implements Event {
         } else {
             return null;
         }
+    }
+
+    public Integer deleteEvent(String eventId) {
+        if (user.getProfileType().equals(ProfileType.ADMIN.name())) {
+            try {
+                eventRepository.deleteById(eventId);
+                return 1;
+            } catch(Exception e) {
+                return -1;
+            }
+        } else {
+            return -1;
+        }   
     }
 }

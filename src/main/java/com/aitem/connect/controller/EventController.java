@@ -8,10 +8,6 @@ import com.aitem.connect.request.EventRequest;
 import com.aitem.connect.repository.AuthenticationRepository;
 import com.aitem.connect.service.implementition.EventService;
 import com.aitem.connect.response.EventResponse;
-
-// import com.aitem.connect.model.ItemModel;
-// import com.aitem.connect.request.ItemRequest;
-// import com.aitem.connect.response.OrderResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +37,7 @@ public class EventController {
 
     @ApiOperation(value = "Create the event for the submitted request")
     @PostMapping(path = "/event", consumes = "application/json", produces = "application/json")
-    public UUID createEvent(@RequestHeader("api-key-token") String key,
-                            @RequestBody EventRequest request) {
+    public UUID createEvent(@RequestHeader("api-key-token") String key, @RequestBody EventRequest request) {
         Authentication authentication = authenticationRepository.findByToken(key);
         User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
         EventModel model = service.createEvent(request, user);
@@ -55,5 +50,13 @@ public class EventController {
         Authentication authentication = authenticationRepository.findByToken(key);
         User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
         return service.getEvents(user);
+    }
+
+    @ApiOperation(value = "Delete event for the user")
+    @DeleteMapping(path = "/event/{event-id}", consumes = "application/json", produces = "application/json")
+    public Integer getStoresOrders(@RequestHeader("api-key-token") String key, @PathVariable("event-id") String eventId) {
+        Authentication authentication = authenticationRepository.findByToken(key);
+        User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return service.deleteEvent(eventId);
     }
 }
