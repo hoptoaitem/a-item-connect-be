@@ -121,7 +121,7 @@ public class StoreService implements Store {
                 }
             }
         } else {
-            List<StoreModel> stores = storeRepository.findAll()
+            List<StoreModel> stores = storeRepository.findAll();
             for(StoreModel item : stores) {
                 if(item.getType() == 0) {
                     storeList.add(item);                    
