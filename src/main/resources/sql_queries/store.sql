@@ -5,9 +5,9 @@ CREATE TABLE IF NOT EXISTS store (
     phone_no VARCHAR(128),
     email VARCHAR(128),
     website VARCHAR(128),
+    type INTEGER NOT NULL,
     created_by VARCHAR(100),
     modified_by VARCHAR(100),
-    type INTEGER NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     modified_at DATETIME DEFAULT CURRENT_TIMESTAMP
 )

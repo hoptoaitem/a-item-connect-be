@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS store (
 	private String retailerUserId;
 	private String email;
 	private String website;
-
+	private long type;
 	private Date createdAt;
 	private Date modifiedAt;
 	private String createdBy;
