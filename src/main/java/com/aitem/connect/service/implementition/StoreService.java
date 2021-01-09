@@ -79,6 +79,34 @@ public class StoreService implements Store {
         return storeModel;
     }
 
+    public StoreModel createEventStore(StoreRequest request, String eventId, User user) {
+        AddressRequest addressRequest = request.getAddress();
+        AddressModel addressModel = AddressMapper.getAddressModel(addressRequest);
+        addressModel.setId(UUID.randomUUID().toString());
+        addressModel = addressRepository.save(addressModel);
+
+        StoreModel storeModel = new StoreModel();
+        storeModel.setId(UUID.randomUUID().toString());
+        storeModel.setAddressId(addressModel.getId());
+        storeModel.setPhoneNo(request.getPhone());
+        storeModel.setRetailerUserId(request.getRetailerUserId());
+        storeModel.setEmail(request.getEmail());
+        storeModel.setWebsite(request.getWebsite());
+        storeModel = storeRepository.save(storeModel);
+
+        if (user.getProfileType().equals(ProfileType.ADMIN.name())) {
+            RetailerUserModel retailerUserModel = new RetailerUserModel();
+            retailerUserModel.setId(UUID.randomUUID().toString());
+            retailerUserModel.setUserId(eventId);
+            retailerUserModel.setStoreId(storeModel.getId());
+            retailerUserModel.setCreatedAt(new Date());
+            retailerUserModel.setModifiedAt(new Date());
+            retailerUserRepository.save(retailerUserModel);
+        }
+
+        return storeModel;
+    }
+
     public List<StoreResponse> getStores(User user) {
         List<StoreModel> storeList = new ArrayList<>();
 
@@ -107,7 +135,7 @@ public class StoreService implements Store {
                 storeList.add(model);
             }
         }
-        
+
         return storeList.stream().map(this::getStoreResponse).collect(Collectors.toList());
     }
 

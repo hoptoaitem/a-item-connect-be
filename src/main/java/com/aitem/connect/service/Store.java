@@ -11,7 +11,6 @@ import com.aitem.connect.response.StoreResponse;
 import java.util.List;
 
 public interface Store {
-
     StoreModel createStore(StoreRequest request, User user);
 
     List<StoreResponse> getStores(User user);
@@ -23,4 +22,6 @@ public interface Store {
     ItemModel createItem(ItemRequest request, String storeId );
 
     List<StoreResponse> getEventStores(User user, String eventId);
+
+    StoreModel createEventStore(StoreRequest request, String eventId, User user);
 }

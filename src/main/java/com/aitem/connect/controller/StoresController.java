@@ -24,11 +24,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/")
 public class StoresController {
-
     private StoreService service;
     private AuthenticationRepository authenticationRepository;
     private UserRepository userRepository;
-
 
     private StoresController(
             @Autowired StoreService service,
@@ -43,57 +41,36 @@ public class StoresController {
     @ApiOperation(value = "Get the stores for the user")
     @GetMapping(path = "/stores", consumes = "application/json", produces = "application/json")
     public List<StoreResponse> getStores(@RequestHeader("api-key-token") String key) {
-
         Authentication authentication = authenticationRepository.findByToken(key);
-        User user = userRepository.findById(authentication.getUserId())
-                .orElseThrow(
-                        () -> new IllegalArgumentException("User not found"));
-
+        User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
         return service.getStores(user);
     }
 
     @ApiOperation(value = "Get the stores for the user")
     @GetMapping(path = "/stores/{store-id}/items", consumes = "application/json", produces = "application/json")
-    public List<ItemModel> getStoresItems(
-            @RequestHeader("api-key-token") String key,
-            @PathVariable("store-id") String storeId) {
-
+    public List<ItemModel> getStoresItems(@RequestHeader("api-key-token") String key, @PathVariable("store-id") String storeId) {
         return service.getItems(storeId);
     }
 
     @PostMapping(path = "/stores/{store-id}/items", consumes = "application/json", produces = "application/json")
-    public UUID createStoreItems(@RequestHeader("api-key-token") String key,
-                                 @RequestBody ItemRequest request,
-                                 @PathVariable("store-id") String storeId) {
-
+    public UUID createStoreItems(@RequestHeader("api-key-token") String key, @RequestBody ItemRequest request, @PathVariable("store-id") String storeId) {
         // TODO: move this to common location
-
         return UUID.fromString(service.createItem(request, storeId).getId());
     }
 
     @ApiOperation(value = "Get the store orders for the user")
     @GetMapping(path = "/stores/{store-id}/orders", consumes = "application/json", produces = "application/json")
-    public List<OrderResponse> getStoresOrders(@RequestHeader("api-key-token") String key,
-                                               @PathVariable("store-id") String storeId) {
-
+    public List<OrderResponse> getStoresOrders(@RequestHeader("api-key-token") String key, @PathVariable("store-id") String storeId) {
         Authentication authentication = authenticationRepository.findByToken(key);
-        User user = userRepository.findById(authentication.getUserId())
-                .orElseThrow(
-                        () -> new IllegalArgumentException("User not found"));
-
+        User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
         return service.getOrdersByStores(storeId);
     }
 
     @ApiOperation(value = "Create the stores for the submitted request")
     @PostMapping(path = "/stores", consumes = "application/json", produces = "application/json")
-    public UUID createStore(@RequestHeader("api-key-token") String key,
-                            @RequestBody StoreRequest request) {
-
+    public UUID createStore(@RequestHeader("api-key-token") String key, @RequestBody StoreRequest request) {
         Authentication authentication = authenticationRepository.findByToken(key);
-        User user = userRepository.findById(authentication.getUserId())
-                .orElseThrow(
-                        () -> new IllegalArgumentException("User not found"));
-
+        User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
         StoreModel model = service.createStore(request, user);
         return UUID.fromString(model.getId());
     }
@@ -104,5 +81,14 @@ public class StoresController {
         Authentication authentication = authenticationRepository.findByToken(key);
         User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
         return service.getEventStores(user, eventId);
+    }
+
+    @ApiOperation(value = "Create the event store for the submitted request")
+    @PostMapping(path = "/stores/{event-id}/event", consumes = "application/json", produces = "application/json")
+    public UUID createEventStore(@RequestHeader("api-key-token") String key, @PathVariable("event-id") String eventId, @RequestBody StoreRequest request) {
+        Authentication authentication = authenticationRepository.findByToken(key);
+        User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        StoreModel model = service.createEventStore(request, eventId, user);
+        return UUID.fromString(model.getId());
     }
 }
