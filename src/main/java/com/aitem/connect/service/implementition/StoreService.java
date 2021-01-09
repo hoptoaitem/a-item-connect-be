@@ -92,6 +92,7 @@ public class StoreService implements Store {
         storeModel.setRetailerUserId(request.getRetailerUserId());
         storeModel.setEmail(request.getEmail());
         storeModel.setWebsite(request.getWebsite());
+        storeModel.setType(1);
         storeModel = storeRepository.save(storeModel);
 
         if (user.getProfileType().equals(ProfileType.ADMIN.name())) {
@@ -114,9 +115,10 @@ public class StoreService implements Store {
             List<RetailerUserModel> retailerUserModelList = retailerUserRepository.findByUserId(user.getId());
 
             for (RetailerUserModel item : retailerUserModelList) {
-                StoreModel model = storeRepository.findById(item.getStoreId())
-                        .orElseThrow(IllegalArgumentException::new);
-                storeList.add(model);
+                StoreModel model = storeRepository.findById(item.getStoreId()).orElseThrow(IllegalArgumentException::new);
+                if(model.getType() == 0) {
+                    storeList.add(model);
+                }
             }
         } else {
             storeList.addAll(storeRepository.findAll());
@@ -132,7 +134,9 @@ public class StoreService implements Store {
             List<RetailerUserModel> retailerUserModelList = retailerUserRepository.findByUserId(eventId);
             for (RetailerUserModel item : retailerUserModelList) {
                 StoreModel model = storeRepository.findById(item.getStoreId()).orElseThrow(IllegalArgumentException::new);
-                storeList.add(model);
+                if(model.getType() == 1) {
+                    storeList.add(model);
+                }
             }
         }
 
