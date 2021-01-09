@@ -97,4 +97,12 @@ public class StoresController {
         StoreModel model = service.createStore(request, user);
         return UUID.fromString(model.getId());
     }
+
+    @ApiOperation(value = "Get the event stores for the user")
+    @GetMapping(path = "/stores/{event-id}/event", consumes = "application/json", produces = "application/json")
+    public List<StoreResponse> getEventStores(@RequestHeader("api-key-token") String key, @PathVariable("event-id") String eventId) {
+        Authentication authentication = authenticationRepository.findByToken(key);
+        User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return service.getEventStores(user, eventId);
+    }
 }

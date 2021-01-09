@@ -21,4 +21,6 @@ public interface Store {
     List<ItemModel> getItems(String storeId);
 
     ItemModel createItem(ItemRequest request, String storeId );
+
+    List<StoreResponse> getEventStores(User user, String eventId);
 }

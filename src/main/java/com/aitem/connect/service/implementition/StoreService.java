@@ -79,13 +79,11 @@ public class StoreService implements Store {
         return storeModel;
     }
 
-
     public List<StoreResponse> getStores(User user) {
-
         List<StoreModel> storeList = new ArrayList<>();
+
         if (user.getProfileType().equals(ProfileType.RETAILER.name())) {
-            List<RetailerUserModel> retailerUserModelList
-                    = retailerUserRepository.findByUserId(user.getId());
+            List<RetailerUserModel> retailerUserModelList = retailerUserRepository.findByUserId(user.getId());
 
             for (RetailerUserModel item : retailerUserModelList) {
                 StoreModel model = storeRepository.findById(item.getStoreId())
@@ -99,13 +97,24 @@ public class StoreService implements Store {
         return storeList.stream().map(this::getStoreResponse).collect(Collectors.toList());
     }
 
-    private StoreResponse getStoreResponse(StoreModel storeModel) {
+    public List<StoreResponse> getEventStores(User user, String eventId) {
+        List<StoreModel> storeList = new ArrayList<>();
 
+        if (user.getProfileType().equals(ProfileType.ADMIN.name())) {
+            List<RetailerUserModel> retailerUserModelList = retailerUserRepository.findByUserId(eventId);
+            for (RetailerUserModel item : retailerUserModelList) {
+                StoreModel model = storeRepository.findById(item.getStoreId()).orElseThrow(IllegalArgumentException::new);
+                storeList.add(model);
+            }
+        }
+        
+        return storeList.stream().map(this::getStoreResponse).collect(Collectors.toList());
+    }
+
+    private StoreResponse getStoreResponse(StoreModel storeModel) {
         StoreResponse storeResponse = new StoreResponse();
         storeResponse.setId(storeModel.getId());
-
-        storeResponse.setAddress(addressRepository.findById(storeModel.getAddressId()).
-                orElseThrow(IllegalArgumentException::new));
+        storeResponse.setAddress(addressRepository.findById(storeModel.getAddressId()).orElseThrow(IllegalArgumentException::new));
         storeResponse.setPhoneNo(storeResponse.getPhoneNo());
         storeResponse.setCreatedAt(storeModel.getCreatedAt());
         storeResponse.setModifiedAt(storeModel.getModifiedAt());
@@ -115,27 +124,19 @@ public class StoreService implements Store {
     }
 
     public List<OrderResponse> getOrdersByStores(String storeId) {
-
         List<OrderModel> storeOrders = orderRepository.findByStoreId(storeId);
-
-        List<OrderResponse> items =
-                storeOrders.stream().map(model -> {
-                    OrderResponse orderResponse = new OrderResponse();
-                    OrderModel orderModel = orderRepository.findById(model.getId())
-                            .orElseThrow(IllegalArgumentException::new);
-
-                    orderResponse.setId(orderModel.getId());
-                    orderResponse.setOrderExternalReferenceId(orderModel.getOrderExternalReferenceId());
-                    orderResponse.setOrderStatus(
-                            OrderStatus.valueOf(orderModel.getOrderStatus()));
-                    orderResponse.setCreatedAt(orderModel.getCreatedAt());
-                    orderResponse.setModifiedAt(orderModel.getModifiedAt());
-                    orderResponse.setCreatedBy(orderModel.getCreatedBy());
-                    orderResponse.setModifiedBy(orderModel.getModifiedBy());
-
-                    return orderResponse;
-                }).collect(Collectors.toList());
-
+        List<OrderResponse> items = storeOrders.stream().map(model -> {
+            OrderResponse orderResponse = new OrderResponse();
+            OrderModel orderModel = orderRepository.findById(model.getId()).orElseThrow(IllegalArgumentException::new);
+            orderResponse.setId(orderModel.getId());
+            orderResponse.setOrderExternalReferenceId(orderModel.getOrderExternalReferenceId());
+            orderResponse.setOrderStatus(OrderStatus.valueOf(orderModel.getOrderStatus()));
+            orderResponse.setCreatedAt(orderModel.getCreatedAt());
+            orderResponse.setModifiedAt(orderModel.getModifiedAt());
+            orderResponse.setCreatedBy(orderModel.getCreatedBy());
+            orderResponse.setModifiedBy(orderModel.getModifiedBy());
+            return orderResponse;
+        }).collect(Collectors.toList());
         return items;
     }
 
