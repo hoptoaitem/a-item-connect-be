@@ -124,7 +124,7 @@ public class StoreService implements Store {
             List<StoreModel> stores = storeRepository.findAll();
             for(StoreModel item : stores) {
                 if(item.getType() == 0) {
-                    storeList.add(item);                    
+                    storeList.add(item);
                 }
             }
             //storeList.addAll(storeDAO.getStoreForUser(user));

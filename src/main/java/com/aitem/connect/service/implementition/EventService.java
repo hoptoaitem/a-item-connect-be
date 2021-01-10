@@ -42,7 +42,7 @@ public class EventService implements Event {
         if (user.getProfileType().equals(ProfileType.ADMIN.name())) {
             return eventRepository.findByCreatedBy(user.getId());
         } else if(user.getProfileType().equals(ProfileType.SHOPPER.name())) {
-            return eventRepository.findByStatus(1);
+            return eventRepository.findByStatus(new Long(1));
         } else {
             return null;
         }
