@@ -135,7 +135,7 @@ public class StoreService implements Store {
     public List<StoreResponse> getEventStores(User user, String eventId) {
         List<StoreModel> storeList = new ArrayList<>();
 
-        if (user.getProfileType().equals(ProfileType.ADMIN.name())) {
+        if (user.getProfileType().equals(ProfileType.ADMIN.name()) || user.getProfileType().equals(ProfileType.SHOPPER.name())) {
             List<RetailerUserModel> retailerUserModelList = retailerUserRepository.findByUserId(eventId);
             for (RetailerUserModel item : retailerUserModelList) {
                 StoreModel model = storeRepository.findById(item.getStoreId()).orElseThrow(IllegalArgumentException::new);
