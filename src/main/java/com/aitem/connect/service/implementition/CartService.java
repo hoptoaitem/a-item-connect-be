@@ -128,7 +128,9 @@ public class CartService implements Cart {
     }
 
     private String getTotal(List<ItemResponse> items) {
-        Double value = items.stream().map(item -> Double.valueOf(item.getPrice()) * item.getQuantity()).mapToDouble(Double::parseDouble).sum();
+        //return String.valueOf(items.stream().map(item ->Long.valueOf(item.getPrice()) * item.getQuantity()).mapToLong(Long::longValue).sum());
+
+        Double value = items.stream().map(item -> Double.parseDouble(item.getPrice()) * item.getQuantity()).mapToDouble(Double::parseDouble).sum();
         return String.valueOf(value);
     }
 
