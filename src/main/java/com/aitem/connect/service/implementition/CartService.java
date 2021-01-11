@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class CartService implements Cart {
-
     private CartRepository cartRepository;
     private OrderRepository orderRepository;
     private OrderDetailRepository orderDetailRepository;
@@ -41,8 +40,6 @@ public class CartService implements Cart {
             @Autowired ItemRepository itemRepository,
             @Autowired StoreRepository storeRepository,
             @Autowired RetailerUserRepository retailerUserRepository
-
-
     ) {
         this.orderRepository = orderRepository;
         this.orderDetailRepository = orderDetailRepository;
@@ -55,33 +52,23 @@ public class CartService implements Cart {
         this.orderDAO = orderDAO;
     }
 
-
     public CartResponse updateCart(CartRequest request, User user) {
-
         CartResponse response = new CartResponse();
-        CartModel model = cartRepository.findByUserIdAndStatus(user.getId()
-                , CartStatus.IN_PROGRESS.name());
+        CartModel model = cartRepository.findByUserIdAndStatus(user.getId(), CartStatus.IN_PROGRESS.name());
         OrderModel order = null;
         if (Objects.isNull(model)) {
-            order = orderDAO.createOrder(mapCartRequestToOrderRequest(request),
-                    user);
+            order = orderDAO.createOrder(mapCartRequestToOrderRequest(request), user);
             response.setOrderId(order.getId());
             response.setStatus(CartStatus.IN_PROGRESS);
-
-            List<OrderDetailsModel> orderDetails
-                    = orderDetailRepository.findByOrderId(order.getId());
+            List<OrderDetailsModel> orderDetails = orderDetailRepository.findByOrderId(order.getId());
 
             if (Objects.nonNull(orderDetails)) {
-                response.setItems(orderDetails.stream()
-                        .map(this::getItemResponse).collect(Collectors.toList()));
+                response.setItems(orderDetails.stream().map(this::getItemResponse).collect(Collectors.toList()));
             }
 
             // create cart
             /*
             	@Id
-
-
-
 
 	private Date createdAt;
 	private Date modifiedAt;
@@ -95,14 +82,11 @@ public class CartService implements Cart {
             cartModel.setStatus(CartStatus.IN_PROGRESS.name());
             cartModel.setUserId(user.getId());
             cartModel.setStoreId(order.getStoreId());
-
             cartRepository.save(cartModel);
-
-
             return response;
         }
-        OrderModel oderModel = orderRepository.findById(model.getOrderId())
-                .orElseThrow(IllegalArgumentException::new);
+
+        OrderModel oderModel = orderRepository.findById(model.getOrderId()).orElseThrow(IllegalArgumentException::new);
 
         order = orderDAO.updateOrder(oderModel, mapCartRequestToOrderRequest(request));
         // update order
@@ -116,15 +100,13 @@ public class CartService implements Cart {
         item.setItemId(request.getItemId());
         item.setQuantity(request.getQuantity());
         items.add(item);
-
         orderRequest.setItemDetails(items);
         return orderRequest;
     }
 
     public CartResponse getCart(User user) {
         CartResponse response = new CartResponse();
-        CartModel model = cartRepository.findByUserIdAndStatus(user.getId()
-                , CartStatus.IN_PROGRESS.name());
+        CartModel model = cartRepository.findByUserIdAndStatus(user.getId(), CartStatus.IN_PROGRESS.name());
         if (Objects.isNull(model)) {
             response.setStatus(CartStatus.EMPTY);
             return response;
@@ -133,37 +115,26 @@ public class CartService implements Cart {
         response.setId(model.getId());
         response.setStatus(CartStatus.valueOf(model.getStatus()));
         response.setOrderId(model.getOrderId());
-
-        OrderModel order = orderRepository.findById(model.getOrderId())
-                .orElseThrow(IllegalArgumentException::new);
-        List<OrderDetailsModel> orderDetails
-                = orderDetailRepository.findByOrderId(order.getId());
+        OrderModel order = orderRepository.findById(model.getOrderId()).orElseThrow(IllegalArgumentException::new);
+        List<OrderDetailsModel> orderDetails = orderDetailRepository.findByOrderId(order.getId());
 
         if (Objects.nonNull(orderDetails)) {
-            response.setItems(orderDetails.stream()
-                    .map(this::getItemResponse).collect(Collectors.toList()));
+            response.setItems(orderDetails.stream().map(this::getItemResponse).collect(Collectors.toList()));
         }
+
         String total = getTotal(response.getItems());
         response.setTotal(total);
         return response;
     }
 
     private String getTotal(List<ItemResponse> items) {
-        return String.valueOf(
-                items.stream()
-                        .map(item ->
-                                Long.valueOf(item.getPrice()) * item.getQuantity())
-                        .mapToLong(Long::longValue)
-                        .sum());
+        return String.valueOf(items.stream().map(item -> Double.valueOf(item.getPrice()) * item.getQuantity()).mapToDouble(Double::parseDouble).sum());
     }
 
     private ItemResponse getItemResponse(OrderDetailsModel orderDetailsModel) {
-
         ItemResponse response = new ItemResponse();
         response.setId(orderDetailsModel.getItemId());
-
-        ItemModel itemModel = itemRepository.findById(orderDetailsModel.getItemId())
-                .orElseThrow(IllegalArgumentException::new);
+        ItemModel itemModel = itemRepository.findById(orderDetailsModel.getItemId()).orElseThrow(IllegalArgumentException::new);
         response.setName(itemModel.getName());
         response.setPrice(itemModel.getPrice());
         response.setType(itemModel.getType());

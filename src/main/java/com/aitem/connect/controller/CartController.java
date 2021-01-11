@@ -17,12 +17,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/")
 public class CartController {
-
-
     private CartService service;
     private UserRepository userRepository;
     private AuthenticationRepository authenticationRepository;
-
 
     private CartController(
             @Autowired CartService service,
@@ -36,27 +33,19 @@ public class CartController {
 
     @ApiOperation(value = "update the cart items for the customer")
     @PutMapping(path = "/carts", consumes = "application/json", produces = "application/json")
-    public CartResponse updateCart(@RequestHeader("api-key-token") String key,
-                                    @RequestBody CartRequest request) {
+    public CartResponse updateCart(@RequestHeader("api-key-token") String key, @RequestBody CartRequest request) {
         // TODO : validate user type
         Authentication authentication = authenticationRepository.findByToken(key);
-        User user = userRepository.findById(authentication.getUserId())
-                .orElseThrow(
-                        () -> new IllegalArgumentException("User not found"));
-
-        return service.updateCart(request,user);
+        User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return service.updateCart(request, user);
     }
 
     @ApiOperation(value = "get the items for the store")
     @GetMapping(path = "/carts", consumes = "application/json", produces = "application/json")
     public CartResponse getCart(@RequestHeader("api-key-token") String key) {
-
         // TODO: move this to common location
         Authentication authentication = authenticationRepository.findByToken(key);
-        User user = userRepository.findById(authentication.getUserId())
-                .orElseThrow(
-                        () -> new IllegalArgumentException("User not found"));
-
+        User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
         return service.getCart(user);
     }
 }
