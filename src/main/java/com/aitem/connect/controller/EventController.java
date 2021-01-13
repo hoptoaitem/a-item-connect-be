@@ -5,6 +5,7 @@ import com.aitem.connect.model.EventModel;
 import com.aitem.connect.model.User;
 import com.aitem.connect.repository.UserRepository;
 import com.aitem.connect.request.EventRequest;
+import com.aitem.connect.request.StartEventRequest;
 import com.aitem.connect.repository.AuthenticationRepository;
 import com.aitem.connect.service.implementition.EventService;
 import com.aitem.connect.response.EventResponse;
@@ -62,10 +63,10 @@ public class EventController {
 
     @ApiOperation(value = "Start event for the user")
     @PutMapping(path = "/event/{event-id}/start", consumes = "application/json", produces = "application/json")
-    public EventModel startEvent(@RequestHeader("api-key-token") String key, @PathVariable("event-id") String eventId) {
+    public EventModel startEvent(@RequestHeader("api-key-token") String key, @RequestBody StartEventRequest request, @PathVariable("event-id") String eventId) {
         Authentication authentication = authenticationRepository.findByToken(key);
         User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        return service.updateCart(user, eventId, 1);
+        return service.updateCart(user, eventId, 1, request.getStopAt());
     }
 
     @ApiOperation(value = "Stop event for the user")
@@ -73,6 +74,6 @@ public class EventController {
     public EventModel stopEvent(@RequestHeader("api-key-token") String key, @PathVariable("event-id") String eventId) {
         Authentication authentication = authenticationRepository.findByToken(key);
         User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        return service.updateCart(user, eventId, 2);
+        return service.updateCart(user, eventId, 2, "");
     }
 }

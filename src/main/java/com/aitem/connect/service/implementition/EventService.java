@@ -61,10 +61,17 @@ public class EventService implements Event {
         }
     }
 
-    public EventModel updateCart(User user, String eventId, Integer status) {
+    public EventModel updateCart(User user, String eventId, Integer status, String stopAt) {
         if (user.getProfileType().equals(ProfileType.ADMIN.name())) {
             EventModel event = eventRepository.findById(eventId).orElseThrow(IllegalArgumentException::new);
             event.setStatus(status);
+
+            if(status == 1) {
+                DateFormat format = new SimpleDateFormat("MM/DD/YYYY h:mm a", Locale.ENGLISH);
+                Date date = format.parse(stopAt);
+                event.setStopAt(date);
+            }
+
             event = eventRepository.save(event);
             return event;
         } else {
