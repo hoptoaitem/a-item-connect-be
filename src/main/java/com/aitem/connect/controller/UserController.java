@@ -6,6 +6,7 @@ import com.aitem.connect.repository.AddressRepository;
 import com.aitem.connect.repository.AuthenticationRepository;
 import com.aitem.connect.repository.UserRepository;
 import com.aitem.connect.response.ProfileResponse;
+import com.aitem.connect.enums.ProfileType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
