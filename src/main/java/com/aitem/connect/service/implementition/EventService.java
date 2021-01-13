@@ -89,7 +89,7 @@ public class EventService implements Event {
 
             if(status == 1) {
                 try {
-                    SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy h:mm a");
+                    SimpleDateFormat format = new SimpleDateFormat("E, DD MM yyyy HH:m:s z");
                     Date date = format.parse(stopAt);
                     event.setStopAt(date);
                 } catch(Exception e) {
