@@ -47,7 +47,7 @@ public class EventService implements Event {
             for (EventModel event : events) {
                 if(nowDate.after(event.getStopAt())) {
                     event.setStatus(2);
-                    event.save();
+                    eventRepository.save(event);
                 }
             }
             return eventRepository.findByCreatedBy(user.getId());
