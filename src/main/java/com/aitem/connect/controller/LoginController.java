@@ -98,9 +98,7 @@ public class LoginController {
     @ApiOperation(value = "Create user for the application")
     @PostMapping(path = "/user", consumes = "application/json", produces = "application/json")
     public LoginResponse createUser(@RequestBody UserRequest request) {
-
         CryptData a = crypt.encrypt(request.getPassword());
-
         User user = new User();
         user.setId(UUID.randomUUID().toString());
         user.setIv(new String(a.getIv()));
@@ -109,6 +107,8 @@ public class LoginController {
         user.setUsername(request.getUsername());
         if (request.getProfileType().equals(ProfileType.SHOPPER)) {
             user.setStatus(UserStatus.APPROVED.name());
+        } else if(request.getProfileType().equals(ProfileType.ADMIN)) {
+           user.setStatus(UserStatus.NOT_APPROVED.name()); 
         } else {
             user.setStatus(UserStatus.SUBMITTED.name());
         }

@@ -60,4 +60,17 @@ public class UserController {
 
         return profileResponse;
     }
+
+    @ApiOperation(value = "Get admins")
+    @GetMapping(path = "/admins", consumes = "application/json", produces = "application/json")
+    public List<User> getAdmins(@RequestHeader("api-key-token") String key) {
+        Authentication authentication = authenticationRepository.findByToken(key);
+        User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        if (user.getProfileType().equals(ProfileType.SUPER.name())) {
+            return userRepository.findByRole(ProfileType.ADMIN.name());
+        } else {
+            return null;            
+        }
+    }
 }

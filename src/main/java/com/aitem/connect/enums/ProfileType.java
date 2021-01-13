@@ -8,6 +8,7 @@ public enum ProfileType {
     RETAILER("RETAILER"),
     SHOPPER("SHOPPER"),
     ADMIN("ADMIN"),
+    SUPER("SUPER"),
     NOT_DECIDED("NOT_DECIDED");
 
     private String code;
