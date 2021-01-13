@@ -44,14 +44,16 @@ public class EventService implements Event {
             List<EventModel> events = eventRepository.findByCreatedBy(user.getId());
             Date nowDate = new Date();
 
+            print()
+
             for (EventModel event : events) {
                 if(nowDate.compareTo(event.getStopAt()) > 0) {
                     event.setStatus(2);
-                    eventRepository.save(event);
+                    //eventRepository.save(event);
                 }
             }
 
-            return eventRepository.findByCreatedBy(user.getId());
+            return events;
         } else if(user.getProfileType().equals(ProfileType.SHOPPER.name())) {
             List<EventModel> events = eventRepository.findByStatus(new Long(1));
             List<EventModel> results = new ArrayList();
