@@ -16,24 +16,13 @@ import java.util.Date;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class EventModel implements Serializable {
-	/*
-CREATE TABLE IF NOT EXISTS event (
-    id VARCHAR(128) PRIMARY KEY,
-    name VARCHAR(128),
-    created_by VARCHAR(100),
-    modified_by VARCHAR(100),
-    status INTEGER NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    modified_at DATETIME DEFAULT CURRENT_TIMESTAMP
-)
-		*/
-
 	@Id
 	private String id;
 	private String name;
 	private String createdBy;
 	private String modifiedBy;
 	private long status;
+	private Date stopAt;
 	private Date createdAt;
 	private Date modifiedAt;
 }
