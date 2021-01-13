@@ -71,8 +71,7 @@ public class UserController {
         User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         if (user.getProfileType().equals(ProfileType.SUPER.name())) {
-            //return userRepository.findByRole(ProfileType.ADMIN.name());
-            return userRepository.findAll();
+            return userRepository.findByProfileType(ProfileType.ADMIN.name());
         } else {
             return null;
         }
