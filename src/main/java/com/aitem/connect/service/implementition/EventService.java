@@ -44,8 +44,6 @@ public class EventService implements Event {
             List<EventModel> events = eventRepository.findByCreatedBy(user.getId());
             Date nowDate = new Date();
 
-            print()
-
             for (EventModel event : events) {
                 if(nowDate.compareTo(event.getStopAt()) > 0) {
                     event.setStatus(2);
