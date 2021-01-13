@@ -6,6 +6,7 @@ import com.aitem.connect.repository.AddressRepository;
 import com.aitem.connect.repository.AuthenticationRepository;
 import com.aitem.connect.repository.UserRepository;
 import com.aitem.connect.response.ProfileResponse;
+import com.aitem.connect.request.UpdateUserStatusRequest;
 import com.aitem.connect.enums.ProfileType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -19,8 +20,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-
-
     private UserRepository userRepository;
     private AddressRepository addressRepository;
     private AuthenticationRepository authenticationRepository;
@@ -68,10 +67,25 @@ public class UserController {
     @GetMapping(path = "/admins", consumes = "application/json", produces = "application/json")
     public List<User> getAdmins(@RequestHeader("api-key-token") String key) {
         Authentication authentication = authenticationRepository.findByToken(key);
-        User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found."));
 
         if (user.getProfileType().equals(ProfileType.SUPER.name())) {
             return userRepository.findByProfileType(ProfileType.ADMIN.name());
+        } else {
+            return null;
+        }
+    }
+
+    @ApiOperation(value = "Update admin status")
+    @PutMapping(path = "/{admin-id}/updateStatus", consumes = "application/json", produces = "application/json")
+    public User updateStatus(@RequestHeader("api-key-token") String key, @PathVariable("admin-id") String adminId, @RequestBody UpdateUserStatusRequest request) {
+        Authentication authentication = authenticationRepository.findByToken(key);
+        User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found."));
+
+        if(user.getProfileType().equals(ProfileType.SUPER.name())) {
+            User admin = userRepository.findById(adminId).orElseThrow(() -> new IllegalArgumentException("Admin not found."));
+            admin.setStatus(request.getStatus());
+            return userRepository.save(admin);
         } else {
             return null;
         }

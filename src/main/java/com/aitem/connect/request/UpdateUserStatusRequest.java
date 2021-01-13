@@ -5,6 +5,6 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class StartEventRequest implements Serializable {
-	private String stopAt;
+public class UpdateUserStatusRequest implements Serializable {
+	private String status;
 }

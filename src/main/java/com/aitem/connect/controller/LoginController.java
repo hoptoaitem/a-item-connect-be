@@ -58,7 +58,11 @@ public class LoginController {
 
         User user = userRepository.findByUsername(username);
         if (user == null) {
-            throw new IllegalArgumentException("User not found");
+            throw new IllegalArgumentException("User not found.");
+        }
+
+        if(user.getStatus().equals(UserStatus.NOT_APPROVED.name())) {
+            throw new IllegalArgumentException("User not allowed.");   
         }
 
         if (user.getProfileType().equals(ProfileType.DRIVER.name())
