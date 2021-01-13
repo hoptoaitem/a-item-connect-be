@@ -45,11 +45,10 @@ public class EventService implements Event {
             Date nowDate = new Date();
 
             for (EventModel event : events) {
-                event.setStatus(2);
-                // if(nowDate.after(event.getStopAt())) {
-                //     event.setStatus(2);
-                //     eventRepository.save(event);
-                // }
+                if(nowDate.compareTo(event.getStopAt()) > 0) {
+                    event.setStatus(2);
+                    eventRepository.save(event);
+                }
             }
 
             return eventRepository.findByCreatedBy(user.getId());
