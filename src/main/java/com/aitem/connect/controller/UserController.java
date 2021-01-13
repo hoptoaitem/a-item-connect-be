@@ -73,7 +73,7 @@ public class UserController {
         if (user.getProfileType().equals(ProfileType.SUPER.name())) {
             return userRepository.findByRole(ProfileType.ADMIN.name());
         } else {
-            return new ArrayList();
+            return null;
         }
     }
 }
