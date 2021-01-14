@@ -78,7 +78,13 @@ public class StoresController {
     @ApiOperation(value = "Create the store with register")
     @PostMapping(path = "/stores/regist", consumes = "application/json", produces = "application/json")
     public UUID createStore(@RequestBody StoreRequest request) {
-        User user = userRepository.findByUsername(request.getRetailer()).orElseThrow(() -> new IllegalArgumentException("User not found."));
+        User user = userRepository.findByUsername(request.getRetailer());
+        if (user == null) {
+            throw new IllegalArgumentException("User not found.");
+        }
+        if (!user.getProfileType().equals(ProfileType.RETAILER.name())) {
+            throw new IllegalArgumentException("Incorrect User Name.");
+        }
         StoreModel model = service.createStore(request, user);
         return UUID.fromString(model.getId());
     }
