@@ -1,7 +1,6 @@
 CREATE TABLE IF NOT EXISTS store (
     id VARCHAR(128) PRIMARY KEY,
     address_id VARCHAR(128),
-    retailer_user_id VARCHAR(128),
     phone_no VARCHAR(128),
     email VARCHAR(128),
     website VARCHAR(128),

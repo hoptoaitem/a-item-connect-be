@@ -34,7 +34,6 @@ CREATE TABLE IF NOT EXISTS store (
 	private String id;
 	private String addressId;
 	private String phoneNo;
-	private String retailerUserId;
 	private String email;
 	private String website;
 	private long type;
