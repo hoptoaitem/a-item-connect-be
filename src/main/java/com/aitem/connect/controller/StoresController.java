@@ -75,6 +75,14 @@ public class StoresController {
         return UUID.fromString(model.getId());
     }
 
+    @ApiOperation(value = "Create the store with register")
+    @PostMapping(path = "/stores/regist", consumes = "application/json", produces = "application/json")
+    public UUID createStore(@RequestBody StoreRequest request) {
+        User user = userRepository.findByUsername(request.getRetailer()).orElseThrow(() -> new IllegalArgumentException("User not found."));
+        StoreModel model = service.createStore(request, user);
+        return UUID.fromString(model.getId());
+    }
+
     @ApiOperation(value = "Get the event stores for the user")
     @GetMapping(path = "/stores/{event-id}/event", consumes = "application/json", produces = "application/json")
     public List<StoreResponse> getEventStores(@RequestHeader("api-key-token") String key, @PathVariable("event-id") String eventId) {
