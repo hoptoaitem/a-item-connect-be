@@ -1,5 +1,6 @@
 package com.aitem.connect.controller;
 
+import com.aitem.connect.enums.ProfileType;
 import com.aitem.connect.model.Authentication;
 import com.aitem.connect.model.ItemModel;
 import com.aitem.connect.model.StoreModel;
