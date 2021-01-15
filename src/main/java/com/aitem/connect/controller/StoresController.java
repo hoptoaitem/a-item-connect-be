@@ -79,7 +79,7 @@ public class StoresController {
     @ApiOperation(value = "Create the store with register")
     @PostMapping(path = "/stores/regist", consumes = "application/json", produces = "application/json")
     public UUID createStore(@RequestBody StoreRequest request) {
-        User user = userRepository.findByUsername(request.getRetailer());
+        User user = userRepository.findByEmail(request.getRetailer());
         if (user == null) {
             throw new IllegalArgumentException("User not found.");
         }

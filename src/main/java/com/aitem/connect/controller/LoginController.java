@@ -51,12 +51,11 @@ public class LoginController {
     @ApiOperation(value = "Login for the application")
     @PostMapping(path = "/login", consumes = "application/json", produces = "application/json")
     public LoginResponse login(@RequestBody LoginRequest request) {
-
         LoginResponse response = new LoginResponse();
         String username = request.getUsername();
         String password = request.getPassword();
 
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByEmail(username);
         if (user == null) {
             throw new IllegalArgumentException("User not found.");
         }
