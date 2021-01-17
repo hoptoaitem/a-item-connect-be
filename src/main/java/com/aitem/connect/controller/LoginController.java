@@ -99,8 +99,8 @@ public class LoginController {
     @ApiOperation(value = "Create user for the application")
     @PostMapping(path = "/user", consumes = "application/json", produces = "application/json")
     public LoginResponse createUser(@RequestBody UserRequest request) {
-        User user = userRepository.findByEmail(request.getEmail());
-        if (user == null) {
+        User tempUser = userRepository.findByEmail(request.getEmail());
+        if (tempUser != null) {
             throw new IllegalArgumentException("User exists with this email.");
         }
 
