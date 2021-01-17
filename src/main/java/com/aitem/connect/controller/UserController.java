@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.ArrayList;
 
 @Api(tags = "User Profile API")
 @CrossOrigin
@@ -41,7 +42,7 @@ public class UserController {
 
         if (user.getProfileType().equals(ProfileType.SUPER.name())) {
             List<User> users = userRepository.findAll();
-            List<User> results = new ArrayList();
+            List<User> results = new ArrayList<>();
 
             for(User user : usrs) {
                 if(!user.getProfileType().equals(ProfileType.SUPER.name()) && !user.getProfileType().equals(ProfileType.ADMIN.name())) {
