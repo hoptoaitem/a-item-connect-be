@@ -35,7 +35,7 @@ public class UserController {
 
     @ApiOperation(value = "Get users")
     @GetMapping(path = "/", consumes = "application/json", produces = "application/json")
-    public List<User> getAdmins(@RequestHeader("api-key-token") String key) {
+    public List<User> getUsers(@RequestHeader("api-key-token") String key) {
         Authentication authentication = authenticationRepository.findByToken(key);
         User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found."));
 
