@@ -33,6 +33,27 @@ public class UserController {
         this.addressRepository = addressRepository;
     }
 
+    @ApiOperation(value = "Get users")
+    @GetMapping(path = "/", consumes = "application/json", produces = "application/json")
+    public List<User> getAdmins(@RequestHeader("api-key-token") String key) {
+        Authentication authentication = authenticationRepository.findByToken(key);
+        User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found."));
+
+        if (user.getProfileType().equals(ProfileType.SUPER.name())) {
+            List<User> users = userRepository.findAll();
+            List<User> results = new ArrayList();
+
+            for(User user : usrs) {
+                if(!user.getProfileType().equals(ProfileType.SUPER.name()) && !user.getProfileType().equals(ProfileType.ADMIN.name())) {
+                    results.add(user);
+                }
+            }
+            return results;
+        } else {
+            return null;
+        }
+    }
+
     @ApiOperation(value = "Get user profile")
     @GetMapping(path = "/profiles", consumes = "application/json", produces = "application/json")
     public ProfileResponse getProfile(@RequestHeader("api-key-token") String key) {
