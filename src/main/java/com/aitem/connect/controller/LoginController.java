@@ -31,8 +31,6 @@ import java.util.UUID;
 @CrossOrigin
 @RestController
 public class LoginController {
-
-
     private UserRepository userRepository;
     private AddressRepository addressRepository;
     private AuthenticationRepository authenticationRepository;
@@ -101,6 +99,11 @@ public class LoginController {
     @ApiOperation(value = "Create user for the application")
     @PostMapping(path = "/user", consumes = "application/json", produces = "application/json")
     public LoginResponse createUser(@RequestBody UserRequest request) {
+        User user = userRepository.findByEmail(request.getEmail());
+        if (user == null) {
+            throw new IllegalArgumentException("User exists with this email.");
+        }
+
         CryptData a = crypt.encrypt(request.getPassword());
         User user = new User();
         user.setId(UUID.randomUUID().toString());
@@ -111,7 +114,7 @@ public class LoginController {
         if (request.getProfileType().equals(ProfileType.SHOPPER)) {
             user.setStatus(UserStatus.APPROVED.name());
         } else if(request.getProfileType().equals(ProfileType.ADMIN)) {
-           user.setStatus(UserStatus.NOT_APPROVED.name()); 
+           user.setStatus(UserStatus.NOT_APPROVED.name());
         } else {
             user.setStatus(UserStatus.SUBMITTED.name());
         }

@@ -10,8 +10,6 @@ import java.io.Serializable;
 public class LoginResponse implements Serializable {
 
 	private static final long serialVersionUID = -6955764528854378889L;
-
-
     private String authToken;
 	private String profileType;
 	private String username;
