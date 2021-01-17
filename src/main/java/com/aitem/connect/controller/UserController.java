@@ -44,9 +44,9 @@ public class UserController {
             List<User> users = userRepository.findAll();
             List<User> results = new ArrayList<>();
 
-            for(User user : users) {
-                if(!user.getProfileType().equals(ProfileType.SUPER.name()) && !user.getProfileType().equals(ProfileType.ADMIN.name())) {
-                    results.add(user);
+            for(User usr : users) {
+                if(!usr.getProfileType().equals(ProfileType.SUPER.name()) && !usr.getProfileType().equals(ProfileType.ADMIN.name())) {
+                    results.add(usr);
                 }
             }
             return results;
