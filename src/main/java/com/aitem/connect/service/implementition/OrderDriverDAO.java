@@ -40,7 +40,7 @@ public class OrderDriverDAO {
         orderModel.setDriverId(user.getId());
         orderModel.setOrderStatus(OrderStatus.WAITING_ACCEPTANCE_FROM_DRIVER.name());
         SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
-        String updated_date = format.parse(new Date());
+        String updated_date = format.format(new Date());
         orderModel.setHistory(orderModel.getHistory() + ", Assigned To Driver At: " + updated_date);
         orderRepository.save(orderModel);
         notificationUtils.sendNotification(user);

@@ -67,7 +67,7 @@ public class OrderDAO {
                 (String.valueOf(AitemConnectHelper.getRandomNumber(8)));
         model.setOrderStatus(OrderStatus.IN_CART.name());
         SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
-        String created_date = format.parse(new Date());
+        String created_date = format.format(new Date());
         model.setHistory("Created At: " + created_date);
         //model.setPurchasedOn(new Date());
         model.setUserId(user.getId());
@@ -246,7 +246,7 @@ public class OrderDAO {
 
         orderModel.setOrderStatus(request.getOrderStatus().name());
         SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
-        String updated_date = format.parse(new Date());
+        String updated_date = format.format(new Date());
 
         switch(request.getOrderStatus()) {
             case OrderStatus.DELIVERED:
