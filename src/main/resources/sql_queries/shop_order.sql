@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS shop_order (
     store_id VARCHAR(128) NOT NULL,
     user_id VARCHAR(128) ,
     driver_id VARCHAR(128),
+    history VARCHAR(256),
     created_by VARCHAR(100),
     modified_by VARCHAR(100),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

@@ -18,6 +18,7 @@ public class OrderResponse {
     private String orderExternalReferenceId;
     @Column(name="status")
     private OrderStatus orderStatus;
+    private String history;
 
     private Date createdAt;
     private Date modifiedAt;

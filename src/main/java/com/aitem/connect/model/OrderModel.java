@@ -37,7 +37,7 @@ public class OrderModel implements Serializable {
 
 	private String userId;
 	private String driverId;
-
+	private String history;
 	private Date createdAt;
 	private Date modifiedAt;
 	private String createdBy;

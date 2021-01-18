@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.text.SimpleDateFormat;
 
 @Component
 public class OrderDAO {
@@ -65,6 +66,9 @@ public class OrderDAO {
         model.setOrderExternalReferenceId
                 (String.valueOf(AitemConnectHelper.getRandomNumber(8)));
         model.setOrderStatus(OrderStatus.IN_CART.name());
+        SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
+        String created_date = format.parse(new Date());
+        model.setHistory("Created At: " + created_date);
         //model.setPurchasedOn(new Date());
         model.setUserId(user.getId());
 
@@ -167,12 +171,12 @@ public class OrderDAO {
     }
 
     private OrderResponse getOrderResponse(OrderModel orderModel) {
-
         OrderResponse orderResponse = new OrderResponse();
         orderResponse.setId(orderModel.getId());
         orderResponse.setOrderExternalReferenceId(orderModel.getOrderExternalReferenceId());
         orderResponse.setOrderStatus(
                 OrderStatus.valueOf(orderModel.getOrderStatus()));
+        orderResponse.setHistory(orderModel.getHistory());
         orderResponse.setCreatedAt(orderModel.getCreatedAt());
         orderResponse.setModifiedAt(orderModel.getModifiedAt());
         orderResponse.setCreatedBy(orderModel.getCreatedBy());
@@ -237,11 +241,35 @@ public class OrderDAO {
     }
 
     public OrderModel updateOrderStatus(UpdateOrderRequest request, User user) {
-
         OrderModel orderModel = orderRepository.findById(request.getOrderId())
                 .orElseThrow(IllegalArgumentException::new);
 
         orderModel.setOrderStatus(request.getOrderStatus().name());
+        SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
+        String updated_date = format.parse(new Date());
+
+        switch(request.getOrderStatus()) {
+            case OrderStatus.DELIVERED:
+                orderModel.setHistory(orderModel.getHistory() + ", Delivered At: " + updated_date);
+                break;
+            case OrderStatus.CHECKED_OUT:
+                orderModel.setHistory(orderModel.getHistory() + ", Checked Out At: " + updated_date);
+                break;
+            case OrderStatus.SUBMITTED_FOR_PAYMENT:
+                orderModel.setHistory(orderModel.getHistory() + ", Submitted At: " + updated_date);
+                break;
+            case OrderStatus.PAYMENT_SUCCESSFUL:
+                orderModel.setHistory(orderModel.getHistory() + ", Successed At: " + updated_date);
+                break;
+            case OrderStatus.DRIVER_DECLINED:
+                orderModel.setHistory(orderModel.getHistory() + ", Declined At: " + updated_date);
+                break;
+            // case OrderStatus.CLERK_ASSIGNED_ORDER_TO_DRIVER:
+            //     orderModel.setHistory(orderModel.getHistory() + ", Declined At: " + updated_date);
+            //     break;
+        }
+
+        
         if (request.getOrderStatus() == OrderStatus.CHECKED_OUT) {
             CartModel cartModel = cartRepository.findByOrderId(request.getOrderId());
             cartModel.setStatus(CartStatus.COMPLETE.name());
@@ -251,12 +279,15 @@ public class OrderDAO {
         if (request.getOrderStatus() == OrderStatus.DRIVER_ACCEPTED
                 && orderModel.getDriverId().equals(user.getId())) {
             orderModel.setOrderStatus(OrderStatus.DRIVER_ACCEPTED.name());
+            orderModel.setHistory(orderModel.getHistory() + ", Driver Accepted At: " + updated_date);
         } else if (request.getOrderStatus() == OrderStatus.DRIVER_ACCEPTED
                 && !orderModel.getDriverId().equals(user.getId())) {
+            orderModel.setHistory(orderModel.getHistory() + ", Expired At: " + updated_date);
             throw new IllegalStateException("Order Expired");
         }
 
         if (request.getOrderStatus() == OrderStatus.PAYMENT_SUCCESSFUL) {
+            orderModel.setOrderStatus(OrderStatus.PAYMENT_SUCCESSFUL.name());
             orderProcessor.handleDriverForOrder(orderModel);
         }
         return orderRepository.save(orderModel);

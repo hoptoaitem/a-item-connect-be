@@ -166,6 +166,7 @@ public class StoreService implements Store {
             orderResponse.setId(orderModel.getId());
             orderResponse.setOrderExternalReferenceId(orderModel.getOrderExternalReferenceId());
             orderResponse.setOrderStatus(OrderStatus.valueOf(orderModel.getOrderStatus()));
+            orderResponse.setHistory(orderModel.getHistory());
             orderResponse.setCreatedAt(orderModel.getCreatedAt());
             orderResponse.setModifiedAt(orderModel.getModifiedAt());
             orderResponse.setCreatedBy(orderModel.getCreatedBy());

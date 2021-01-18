@@ -22,8 +22,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/")
 public class OrderController {
-
-
     private OrderService service;
     private AuthenticationRepository authenticationRepository;
     private UserRepository userRepository;
@@ -41,7 +39,6 @@ public class OrderController {
     @ApiOperation(value = "Get the orders for the store")
     @GetMapping(path = "/orders", consumes = "application/json", produces = "application/json")
     public List<OrderResponse> getOrders(@RequestHeader("api-key-token") String key) {
-
         Authentication authentication = authenticationRepository.findByToken(key);
         User user = userRepository.findById(authentication.getUserId())
                 .orElseThrow(
