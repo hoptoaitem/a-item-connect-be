@@ -24,7 +24,6 @@ import java.text.SimpleDateFormat;
 
 @Component
 public class OrderDAO {
-
     private OrderRepository orderRepository;
     private OrderDetailRepository orderDetailRepository;
     private AddressRepository addressRepository;
@@ -248,20 +247,20 @@ public class OrderDAO {
         SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
         String updated_date = format.format(new Date());
 
-        switch(request.getOrderStatus()) {
-            case OrderStatus.DELIVERED:
+        switch(request.getOrderStatus().name()) {
+            case OrderStatus.DELIVERED.name():
                 orderModel.setHistory(orderModel.getHistory() + ", Delivered At: " + updated_date);
                 break;
-            case OrderStatus.CHECKED_OUT:
+            case OrderStatus.CHECKED_OUT.name():
                 orderModel.setHistory(orderModel.getHistory() + ", Checked Out At: " + updated_date);
                 break;
-            case OrderStatus.SUBMITTED_FOR_PAYMENT:
+            case OrderStatus.SUBMITTED_FOR_PAYMENT.name():
                 orderModel.setHistory(orderModel.getHistory() + ", Submitted At: " + updated_date);
                 break;
-            case OrderStatus.PAYMENT_SUCCESSFUL:
+            case OrderStatus.PAYMENT_SUCCESSFUL.name():
                 orderModel.setHistory(orderModel.getHistory() + ", Successed At: " + updated_date);
                 break;
-            case OrderStatus.DRIVER_DECLINED:
+            case OrderStatus.DRIVER_DECLINED.name():
                 orderModel.setHistory(orderModel.getHistory() + ", Declined At: " + updated_date);
                 break;
             // case OrderStatus.CLERK_ASSIGNED_ORDER_TO_DRIVER:

@@ -15,7 +15,6 @@ import java.util.Date;
 
 @Component
 public class OrderDriverDAO {
-
     private OrderRepository orderRepository;
     private UserRepository userRepository;
     private NotificationUtils notificationUtils;
@@ -31,7 +30,6 @@ public class OrderDriverDAO {
     }
 
     public OrderModel assignOrderToDriver(UpdateOrderRequest request) {
-
         // TODO: profile type and ph unique contraint
         User user = userRepository.findByPhone(request.getDriverPhone());
 
