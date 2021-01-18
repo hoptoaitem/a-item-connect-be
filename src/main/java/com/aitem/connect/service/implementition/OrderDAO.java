@@ -248,27 +248,27 @@ public class OrderDAO {
         String updated_date = format.format(new Date());
 
         if(request.getOrderStatus() == OrderStatus.DELIVERED) {
-            orderModel.setHistory(orderModel.getHistory() + ", Delivered At: " + updated_date);
+            orderModel.setHistory(orderModel.getHistory() + "; Delivered At: " + updated_date);
         }
 
         if(request.getOrderStatus() == OrderStatus.CHECKED_OUT) {
-            orderModel.setHistory(orderModel.getHistory() + ", Checked Out At: " + updated_date);
+            orderModel.setHistory(orderModel.getHistory() + "; Checked Out At: " + updated_date);
         }
 
         if(request.getOrderStatus() == OrderStatus.SUBMITTED_FOR_PAYMENT) {
-            orderModel.setHistory(orderModel.getHistory() + ", Submitted At: " + updated_date);
+            orderModel.setHistory(orderModel.getHistory() + "; Submitted At: " + updated_date);
         }
 
         if(request.getOrderStatus() == OrderStatus.PAYMENT_SUCCESSFUL) {
-            orderModel.setHistory(orderModel.getHistory() + ", Successed At: " + updated_date);
+            orderModel.setHistory(orderModel.getHistory() + "; Successed At: " + updated_date);
         }
 
         if(request.getOrderStatus() == OrderStatus.DRIVER_DECLINED) {
-            orderModel.setHistory(orderModel.getHistory() + ", Declined At: " + updated_date);
+            orderModel.setHistory(orderModel.getHistory() + "; Declined At: " + updated_date);
         }
 
         // case OrderStatus.CLERK_ASSIGNED_ORDER_TO_DRIVER:
-        //     orderModel.setHistory(orderModel.getHistory() + ", Declined At: " + updated_date);
+        //     orderModel.setHistory(orderModel.getHistory() + "; Declined At: " + updated_date);
         //     break;
 
         
@@ -281,10 +281,10 @@ public class OrderDAO {
         if (request.getOrderStatus() == OrderStatus.DRIVER_ACCEPTED
                 && orderModel.getDriverId().equals(user.getId())) {
             orderModel.setOrderStatus(OrderStatus.DRIVER_ACCEPTED.name());
-            orderModel.setHistory(orderModel.getHistory() + ", Driver Accepted At: " + updated_date);
+            orderModel.setHistory(orderModel.getHistory() + "; Driver Accepted At: " + updated_date);
         } else if (request.getOrderStatus() == OrderStatus.DRIVER_ACCEPTED
                 && !orderModel.getDriverId().equals(user.getId())) {
-            orderModel.setHistory(orderModel.getHistory() + ", Expired At: " + updated_date);
+            orderModel.setHistory(orderModel.getHistory() + "; Expired At: " + updated_date);
             throw new IllegalStateException("Order Expired");
         }
 
