@@ -247,26 +247,29 @@ public class OrderDAO {
         SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
         String updated_date = format.format(new Date());
 
-        switch(request.getOrderStatus().name()) {
-            case OrderStatus.DELIVERED.name():
-                orderModel.setHistory(orderModel.getHistory() + ", Delivered At: " + updated_date);
-                break;
-            case OrderStatus.CHECKED_OUT.name():
-                orderModel.setHistory(orderModel.getHistory() + ", Checked Out At: " + updated_date);
-                break;
-            case OrderStatus.SUBMITTED_FOR_PAYMENT.name():
-                orderModel.setHistory(orderModel.getHistory() + ", Submitted At: " + updated_date);
-                break;
-            case OrderStatus.PAYMENT_SUCCESSFUL.name():
-                orderModel.setHistory(orderModel.getHistory() + ", Successed At: " + updated_date);
-                break;
-            case OrderStatus.DRIVER_DECLINED.name():
-                orderModel.setHistory(orderModel.getHistory() + ", Declined At: " + updated_date);
-                break;
-            // case OrderStatus.CLERK_ASSIGNED_ORDER_TO_DRIVER:
-            //     orderModel.setHistory(orderModel.getHistory() + ", Declined At: " + updated_date);
-            //     break;
+        if(request.getOrderStatus() == OrderStatus.DELIVERED) {
+            orderModel.setHistory(orderModel.getHistory() + ", Delivered At: " + updated_date);
         }
+
+        if(request.getOrderStatus() == OrderStatus.CHECKED_OUT) {
+            orderModel.setHistory(orderModel.getHistory() + ", Checked Out At: " + updated_date);
+        }
+
+        if(request.getOrderStatus() == OrderStatus.SUBMITTED_FOR_PAYMENT) {
+            orderModel.setHistory(orderModel.getHistory() + ", Submitted At: " + updated_date);
+        }
+
+        if(request.getOrderStatus() == OrderStatus.PAYMENT_SUCCESSFUL) {
+            orderModel.setHistory(orderModel.getHistory() + ", Successed At: " + updated_date);
+        }
+
+        if(request.getOrderStatus() == OrderStatus.DRIVER_DECLINED) {
+            orderModel.setHistory(orderModel.getHistory() + ", Declined At: " + updated_date);
+        }
+
+        // case OrderStatus.CLERK_ASSIGNED_ORDER_TO_DRIVER:
+        //     orderModel.setHistory(orderModel.getHistory() + ", Declined At: " + updated_date);
+        //     break;
 
         
         if (request.getOrderStatus() == OrderStatus.CHECKED_OUT) {
