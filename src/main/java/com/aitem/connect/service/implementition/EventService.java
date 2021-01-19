@@ -27,7 +27,7 @@ public class EventService implements Event {
     private EventService(
         @Autowired EventRepository eventRepository,
         @Autowired ItemDAO itemDAO,
-        @Autowired RetailerUserRepository retailerUserRepository
+        @Autowired RetailerUserRepository retailerUserRepository,
         @Autowired StoreRepository storeRepository
     ) {
         this.eventRepository = eventRepository;
