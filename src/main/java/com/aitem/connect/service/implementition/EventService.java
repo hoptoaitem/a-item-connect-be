@@ -1,6 +1,6 @@
 package com.aitem.connect.service.implementition;
 
-import com.aitem.connect.repository.EventRepository;
+import com.aitem.connect.repository.*;
 import com.aitem.connect.request.EventRequest;
 import com.aitem.connect.response.EventResponse;
 import com.aitem.connect.response.EventProductsResponse;
@@ -20,14 +20,20 @@ import java.text.SimpleDateFormat;
 @Service
 public class EventService implements Event {
     private EventRepository eventRepository;
+    private RetailerUserRepository retailerUserRepository;
+    private StoreRepository storeRepository;
     private ItemDAO itemDAO;
 
     private EventService(
         @Autowired EventRepository eventRepository,
-        @Autowired ItemDAO itemDAO
+        @Autowired ItemDAO itemDAO,
+        @Autowired RetailerUserRepository retailerUserRepository
+        @Autowired StoreRepository storeRepository
     ) {
         this.eventRepository = eventRepository;
         this.itemDAO = itemDAO;
+        this.retailerUserRepository = retailerUserRepository;
+        this.storeRepository = storeRepository;
     }
 
     @Override
@@ -116,7 +122,7 @@ public class EventService implements Event {
 
             for (EventModel event : events) {
                 if(nowDate.before(event.getStopAt())) {
-                    response.addAll(getEventProductsResponse(event));
+                    response.addAll(getEventProductsResponseWithEvent(event));
                 }
             }
 
