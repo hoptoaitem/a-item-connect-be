@@ -22,18 +22,21 @@ public class EventService implements Event {
     private EventRepository eventRepository;
     private RetailerUserRepository retailerUserRepository;
     private StoreRepository storeRepository;
+    private AddressRepository addressRepository;
     private ItemDAO itemDAO;
 
     private EventService(
         @Autowired EventRepository eventRepository,
         @Autowired ItemDAO itemDAO,
         @Autowired RetailerUserRepository retailerUserRepository,
-        @Autowired StoreRepository storeRepository
+        @Autowired StoreRepository storeRepository,
+        @Autowired AddressRepository addressRepository
     ) {
         this.eventRepository = eventRepository;
         this.itemDAO = itemDAO;
         this.retailerUserRepository = retailerUserRepository;
         this.storeRepository = storeRepository;
+        this.addressRepository = addressRepository;
     }
 
     @Override
