@@ -6,6 +6,7 @@ import com.aitem.connect.response.EventResponse;
 import com.aitem.connect.response.EventProductsResponse;
 import com.aitem.connect.model.*;
 import com.aitem.connect.enums.ProfileType;
+import com.aitem.connect.enums.ItemStatus;
 import com.aitem.connect.service.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -154,28 +155,30 @@ public class EventService implements Event {
         List<EventProductsResponse> results = new ArrayList<EventProductsResponse>();
 
         for(ItemModel item : items) {
-            EventProductsResponse result = new EventProductsResponse();
-            result.setId(item.getId());
-            result.setName(item.getName());
-            result.setType(item.getType());
-            result.setPrice(item.getPrice());
-            result.setQuantity(item.getQuantity());
-            result.setWebsite(item.getWebsite());
-            result.setDescription(item.getDescription());
-            result.setShortDescription(item.getShortDescription());
-            result.setSku(item.getSku());
-            result.setWeight(item.getWeight());
-            result.setPictureId(item.getPictureId());
-            result.setEndDate(eventModel.getStopAt());
-            AddressModel addressModel = addressRepository.findById(storeModel.getAddressId()).orElseThrow(() -> new IllegalArgumentException("Address not found"));
-            result.setStoreName(addressModel.getAddressName());
-            result.setStreetAddress(addressModel.getStreetAddress());
-            result.setStreetAddress1(addressModel.getStreetAddress1());
-            result.setCity(addressModel.getCity());
-            result.setState(addressModel.getState());
-            result.setZip(addressModel.getZip());
-            result.setEventName(eventModel.getName());
-            results.add(result);
+            if(!item.getStatus().equals(ItemStatus.IN_ACTIVE.name())) {
+                EventProductsResponse result = new EventProductsResponse();
+                result.setId(item.getId());
+                result.setName(item.getName());
+                result.setType(item.getType());
+                result.setPrice(item.getPrice());
+                result.setQuantity(item.getQuantity());
+                result.setWebsite(item.getWebsite());
+                result.setDescription(item.getDescription());
+                result.setShortDescription(item.getShortDescription());
+                result.setSku(item.getSku());
+                result.setWeight(item.getWeight());
+                result.setPictureId(item.getPictureId());
+                result.setEndDate(eventModel.getStopAt());
+                AddressModel addressModel = addressRepository.findById(storeModel.getAddressId()).orElseThrow(() -> new IllegalArgumentException("Address not found"));
+                result.setStoreName(addressModel.getAddressName());
+                result.setStreetAddress(addressModel.getStreetAddress());
+                result.setStreetAddress1(addressModel.getStreetAddress1());
+                result.setCity(addressModel.getCity());
+                result.setState(addressModel.getState());
+                result.setZip(addressModel.getZip());
+                result.setEventName(eventModel.getName());
+                results.add(result);
+            }
         }
 
         return results;
