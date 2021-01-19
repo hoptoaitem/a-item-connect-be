@@ -80,7 +80,6 @@ public class ItemService implements Item {
     }
 
     public List<ItemModel> getItems(User user) {
-
         if (user.getProfileType().equals(ProfileType.RETAILER.name())) {
 
             List<RetailerUserModel> retailerUserModel

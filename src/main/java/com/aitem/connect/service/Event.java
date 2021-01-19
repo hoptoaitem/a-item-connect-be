@@ -3,6 +3,7 @@ package com.aitem.connect.service;
 import com.aitem.connect.model.EventModel;
 import com.aitem.connect.model.User;
 import com.aitem.connect.request.EventRequest;
+import com.aitem.connect.response.EventProductsResponse;
 import java.util.List;
 
 public interface Event {
@@ -10,4 +11,5 @@ public interface Event {
     List<EventModel> getEvents(User user);
     Integer deleteEvent(User user, String eventId);
     EventModel updateCart(User user, String eventId, Integer status, String stopAt);
+    List<EventProductsResponse> getAvailableEventProducts(User user);
 }

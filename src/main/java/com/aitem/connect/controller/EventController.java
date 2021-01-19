@@ -9,6 +9,7 @@ import com.aitem.connect.request.StartEventRequest;
 import com.aitem.connect.repository.AuthenticationRepository;
 import com.aitem.connect.service.implementition.EventService;
 import com.aitem.connect.response.EventResponse;
+import com.aitem.connect.response.EventProductsResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,5 +76,13 @@ public class EventController {
         Authentication authentication = authenticationRepository.findByToken(key);
         User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
         return service.updateCart(user, eventId, 2, "");
+    }
+
+    @ApiOperation(value = "Get the events for the user")
+    @GetMapping(path = "/events/products", consumes = "application/json", produces = "application/json")
+    public List<EventProductsResponse> getAvailableEventProducts(@RequestHeader("api-key-token") String key) {
+        Authentication authentication = authenticationRepository.findByToken(key);
+        User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return service.getAvailableEventProducts(user);
     }
 }

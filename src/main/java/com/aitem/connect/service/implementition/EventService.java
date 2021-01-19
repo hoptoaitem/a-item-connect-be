@@ -3,6 +3,7 @@ package com.aitem.connect.service.implementition;
 import com.aitem.connect.repository.EventRepository;
 import com.aitem.connect.request.EventRequest;
 import com.aitem.connect.response.EventResponse;
+import com.aitem.connect.response.EventProductsResponse;
 import com.aitem.connect.model.*;
 import com.aitem.connect.enums.ProfileType;
 import com.aitem.connect.service.Event;
@@ -19,11 +20,14 @@ import java.text.SimpleDateFormat;
 @Service
 public class EventService implements Event {
     private EventRepository eventRepository;
+    private ItemDAO itemDAO;
 
     private EventService(
-        @Autowired EventRepository eventRepository
+        @Autowired EventRepository eventRepository,
+        @Autowired ItemDAO itemDAO,
     ) {
         this.eventRepository = eventRepository;
+        this.itemDAO = itemDAO;
     }
 
     @Override
@@ -102,5 +106,67 @@ public class EventService implements Event {
         } else {
             return null;
         }
+    }
+
+    public List<EventProductsResponse> getAvailableEventProducts(User user) {
+        if(user.getProfileType().equals(ProfileType.SHOPPER.name())) {
+            List<EventModel> events = eventRepository.findByStatus(new Long(1));
+            List<EventProductsResponse> response = new ArrayList<EventProductsResponse>();
+            Date nowDate = new Date();
+
+            for (EventModel event : events) {
+                if(nowDate.before(event.getStopAt())) {
+                    response.add(getEventProductsResponse(event));
+                }
+            }
+
+            return response;
+        } else {
+            return null;
+        }
+    }
+
+    private List<EventProductsResponse> getEventProductsResponseWithEvent(EventModel eventModel) {
+        List<RetailerUserModel> retailerUserModelList = retailerUserRepository.findByUserId(eventId);
+        List<EventProductsResponse> result = new ArrayList<EventProductsResponse>();
+
+        for (RetailerUserModel item : retailerUserModelList) {
+            StoreModel model = storeRepository.findById(item.getStoreId()).orElseThrow(IllegalArgumentException::new);
+            if(model.getType() == 1) {
+                result.add(getEventProductsResponseWithStore(eventModel, model));
+            }
+        }
+
+        return result;
+    }
+
+    private List<EventProductsResponse> getEventProductsResponseWithStore(EventModel eventModel, StoreModel storeModel) {
+        List<ItemModel> items = itemDAO.getItems(storeModel.id);
+        List<EventProductsResponse> result = new ArrayList<EventProductsResponse>();
+
+        for(ItemModel item : items) {
+            result.setId(item.getId());
+            result.setName(item.getName());
+            result.setType(item.getType());
+            result.setPrice(item.getPrice());
+            result.setQuantity(item.getQuantity());
+            result.setWebsite(item.getWebsite());
+            result.setDescription(item.getDescription());
+            result.setShortDescription(item.getShortDescription());
+            result.setSku(item.getSku());
+            result.setWeight(item.getWeight());
+            result.setPictureId(item.getPictureId());
+            result.setEndDate(eventModel.getStopAt());
+            AddressModel addressModel = addressRepository.findById(storeModel.getAddressId()).orElseThrow(() -> new IllegalArgumentException("Address not found"));
+            result.setStoreName(addressModel.getAddressName());
+            result.setStreetAddress(addressModel.getStreetAddress());
+            result.setStreetAddress1(addressModel.getStreetAddress1());
+            result.setCity(addressModel.getCity());
+            result.setState(addressModel.getState());
+            result.setZip(addressModel.getZip());
+            result.setEventName(eventModel.getName());
+        }
+
+        return result;
     }
 }
