@@ -116,7 +116,7 @@ public class EventService implements Event {
 
             for (EventModel event : events) {
                 if(nowDate.before(event.getStopAt())) {
-                    response.add(getEventProductsResponse(event));
+                    response.addAll(getEventProductsResponse(event));
                 }
             }
 
@@ -127,13 +127,13 @@ public class EventService implements Event {
     }
 
     private List<EventProductsResponse> getEventProductsResponseWithEvent(EventModel eventModel) {
-        List<RetailerUserModel> retailerUserModelList = retailerUserRepository.findByUserId(eventId);
+        List<RetailerUserModel> retailerUserModelList = retailerUserRepository.findByUserId(eventModel.getId());
         List<EventProductsResponse> result = new ArrayList<EventProductsResponse>();
 
         for (RetailerUserModel item : retailerUserModelList) {
             StoreModel model = storeRepository.findById(item.getStoreId()).orElseThrow(IllegalArgumentException::new);
             if(model.getType() == 1) {
-                result.add(getEventProductsResponseWithStore(eventModel, model));
+                result.addAll(getEventProductsResponseWithStore(eventModel, model));
             }
         }
 
