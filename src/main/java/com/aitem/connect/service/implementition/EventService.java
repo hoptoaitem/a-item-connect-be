@@ -147,10 +147,11 @@ public class EventService implements Event {
     }
 
     private List<EventProductsResponse> getEventProductsResponseWithStore(EventModel eventModel, StoreModel storeModel) {
-        List<ItemModel> items = itemDAO.getItems(storeModel.id);
-        List<EventProductsResponse> result = new ArrayList<EventProductsResponse>();
+        List<ItemModel> items = itemDAO.getItems(storeModel.getId());
+        List<EventProductsResponse> results = new ArrayList<EventProductsResponse>();
 
         for(ItemModel item : items) {
+            EventProductsResponse result = new EventProductsResponse();
             result.setId(item.getId());
             result.setName(item.getName());
             result.setType(item.getType());
@@ -171,8 +172,9 @@ public class EventService implements Event {
             result.setState(addressModel.getState());
             result.setZip(addressModel.getZip());
             result.setEventName(eventModel.getName());
+            results.add(result);
         }
 
-        return result;
+        return results;
     }
 }
