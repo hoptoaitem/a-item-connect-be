@@ -66,7 +66,8 @@ public class EventController {
     public EventModel startEvent(@RequestHeader("api-key-token") String key, @PathVariable("event-id") String eventId, @RequestBody StartEventRequest request) {
         Authentication authentication = authenticationRepository.findByToken(key);
         User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        return service.updateCart(user, eventId, 1, request.getStopAt(), request.getCount());
+        return service.updateCart(user, eventId, 1, request.getStopAt(), 9000);
+        // return service.updateCart(user, eventId, 1, request.getStopAt(), request.getCount());
     }
 
     @ApiOperation(value = "Stop event for the user")

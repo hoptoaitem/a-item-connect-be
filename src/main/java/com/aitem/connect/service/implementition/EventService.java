@@ -48,7 +48,7 @@ public class EventService implements Event {
         eventModel.setModifiedBy(user.getId());
         eventModel.setCreatedAt(new Date());
         eventModel.setModifiedAt(new Date());
-        eventModel.setRemainCount(9000);
+        eventModel.setRemainCount(0);
         eventModel = eventRepository.save(eventModel);
         return eventModel;
     }
