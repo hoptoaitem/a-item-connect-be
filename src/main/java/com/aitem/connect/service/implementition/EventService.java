@@ -98,7 +98,7 @@ public class EventService implements Event {
 
     public EventModel updateCart(User user, String eventId, Integer status, String stopAt, Integer count) {
         if (user.getProfileType().equals(ProfileType.ADMIN.name())) {
-            EventModel event = eventRepository.findById(eventId).orElseThrow(IllegalArgumentException::new);
+            EventModel event = eventRepository.findById(eventId);
             event.setStatus(status);
 
             if(status == 1) {

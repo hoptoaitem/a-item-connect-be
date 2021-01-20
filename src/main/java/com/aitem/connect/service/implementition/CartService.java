@@ -96,9 +96,9 @@ public class CartService implements Cart {
         ItemModel itemModel = itemRepository.findById(itemId).orElseThrow(IllegalArgumentException::new);
         StoreModel storeModel = storeRepository.findById(itemModel.getStoreId()).orElseThrow(IllegalArgumentException::new);
 
-        if(storeModel.getType == 1) {
-            RetailerUserModel retailerModel = retailerUserRepository.findByStoreId(itemModel.getStoreId()).orElseThrow(IllegalArgumentException::new);
-            EventModel event = eventRepository.findById(retailerModel.getUserId()).orElseThrow(IllegalArgumentException::new);
+        if(storeModel.getType() == 1) {
+            RetailerUserModel retailerModel = retailerUserRepository.findByStoreId(itemModel.getStoreId());
+            EventModel event = eventRepository.findById(retailerModel.getUserId());
             Date nowDate = new Date();
             if(event.getStatus() == 1 && nowDate.before(event.getStopAt())) {
                 if(event.getRemainCount() > count) {
