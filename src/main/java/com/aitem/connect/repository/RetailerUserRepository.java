@@ -9,7 +9,6 @@ import java.util.List;
 
 
 public interface RetailerUserRepository extends JpaRepository<RetailerUserModel, String> {
-
-
     List<RetailerUserModel> findByUserId(@Param("userId") String userId);
+    RetailerUserModel findByStoreId(@Param("storeId") String storeId);
 }

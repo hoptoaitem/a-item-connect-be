@@ -8,7 +8,6 @@ import java.util.List;
 
 @Data
 public class CartRequest implements Serializable {
-
 	private String itemId;
 	private Integer quantity;
 }

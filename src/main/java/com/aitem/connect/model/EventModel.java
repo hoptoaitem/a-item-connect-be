@@ -22,6 +22,7 @@ public class EventModel implements Serializable {
 	private String createdBy;
 	private String modifiedBy;
 	private long status;
+	private long remainCount;
 	private Date stopAt;
 	private Date createdAt;
 	private Date modifiedAt;

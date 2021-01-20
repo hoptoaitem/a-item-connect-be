@@ -35,7 +35,7 @@ public class OrderDetailsModel {
     private String itemId;
 
     @Column(name="qty")
-    private Integer quantity;
+    private long quantity;
 
     private Date createdAt;
     private Date modifiedAt;

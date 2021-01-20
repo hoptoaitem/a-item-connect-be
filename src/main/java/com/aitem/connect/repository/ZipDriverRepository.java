@@ -9,7 +9,5 @@ import java.util.List;
 
 @Repository
 public interface ZipDriverRepository extends JpaRepository<ZipDriver, String> {
-
-
     List<ZipDriver> findByZip(@Param("zip") String zip);
 }

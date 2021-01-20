@@ -14,7 +14,7 @@ public class EventProductsResponse implements Serializable {
     private String name;
     private String type;
     private String price;
-    private long quantity;
+    private Integer quantity;
     private String website;
     private String description;
     private String shortDescription;

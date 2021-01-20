@@ -10,5 +10,5 @@ public class ItemResponse {
     private String name;
     private String type;
     private String price;
-    private long quantity;
+    private Integer quantity;
 }

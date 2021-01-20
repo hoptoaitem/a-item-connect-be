@@ -2,7 +2,6 @@ package com.aitem.connect.service.implementition;
 
 import com.aitem.connect.repository.*;
 import com.aitem.connect.request.EventRequest;
-import com.aitem.connect.response.EventResponse;
 import com.aitem.connect.response.EventProductsResponse;
 import com.aitem.connect.model.*;
 import com.aitem.connect.enums.ProfileType;
@@ -49,6 +48,7 @@ public class EventService implements Event {
         eventModel.setModifiedBy(user.getId());
         eventModel.setCreatedAt(new Date());
         eventModel.setModifiedAt(new Date());
+        eventModel.setRemainCount(0);
         eventModel = eventRepository.save(eventModel);
         return eventModel;
     }
@@ -59,7 +59,7 @@ public class EventService implements Event {
             Date nowDate = new Date();
 
             for (EventModel event : events) {
-                if(event.getStatus() == 1 && nowDate.after(event.getStopAt())) {
+                if(event.getStatus() == 1 && (nowDate.after(event.getStopAt()) || event.getRemainCount() == 0)) {
                     event.setStatus(2);
                     eventRepository.save(event);
                 }
@@ -72,7 +72,7 @@ public class EventService implements Event {
             Date nowDate = new Date();
 
             for (EventModel event : events) {
-                if(nowDate.before(event.getStopAt())) {
+                if(nowDate.before(event.getStopAt()) && event.getRemainCount() > 0) {
                     results.add(event);
                 }
             }
@@ -96,7 +96,7 @@ public class EventService implements Event {
         }
     }
 
-    public EventModel updateCart(User user, String eventId, Integer status, String stopAt) {
+    public EventModel updateCart(User user, String eventId, Integer status, String stopAt, Integer count) {
         if (user.getProfileType().equals(ProfileType.ADMIN.name())) {
             EventModel event = eventRepository.findById(eventId).orElseThrow(IllegalArgumentException::new);
             event.setStatus(status);
@@ -106,6 +106,7 @@ public class EventService implements Event {
                     SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
                     Date date = format.parse(stopAt);
                     event.setStopAt(date);
+                    event.setRemainCount(count);
                 } catch(Exception e) {
                     return null;
                 }

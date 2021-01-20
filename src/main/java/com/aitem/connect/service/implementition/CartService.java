@@ -28,6 +28,7 @@ public class CartService implements Cart {
     private ItemRepository itemRepository;
     private StoreRepository storeRepository;
     private RetailerUserRepository retailerUserRepository;
+    private EventRepository eventRepository;
     private OrderDAO orderDAO;
     
     private CartService(
@@ -39,6 +40,7 @@ public class CartService implements Cart {
             @Autowired UserRepository userRepository,
             @Autowired ItemRepository itemRepository,
             @Autowired StoreRepository storeRepository,
+            @Autowired EventRepository eventRepository,
             @Autowired RetailerUserRepository retailerUserRepository
     ) {
         this.orderRepository = orderRepository;
@@ -50,47 +52,70 @@ public class CartService implements Cart {
         this.retailerUserRepository = retailerUserRepository;
         this.cartRepository = cartRepository;
         this.orderDAO = orderDAO;
+        this.eventRepository = eventRepository;
     }
 
     public CartResponse updateCart(CartRequest request, User user) {
         CartResponse response = new CartResponse();
-        CartModel model = cartRepository.findByUserIdAndStatus(user.getId(), CartStatus.IN_PROGRESS.name());
-        OrderModel order = null;
-        if (Objects.isNull(model)) {
-            order = orderDAO.createOrder(mapCartRequestToOrderRequest(request), user);
-            response.setOrderId(order.getId());
-            response.setStatus(CartStatus.IN_PROGRESS);
-            List<OrderDetailsModel> orderDetails = orderDetailRepository.findByOrderId(order.getId());
+        int status = updateEventCount(request.getItemId(), request.getQuantity());
+        if(status == 1) {
+            CartModel model = cartRepository.findByUserIdAndStatus(user.getId(), CartStatus.IN_PROGRESS.name());
+            OrderModel order = null;
+            if (Objects.isNull(model)) {
+                order = orderDAO.createOrder(mapCartRequestToOrderRequest(request), user);
+                response.setOrderId(order.getId());
+                response.setStatus(CartStatus.IN_PROGRESS);
+                List<OrderDetailsModel> orderDetails = orderDetailRepository.findByOrderId(order.getId());
 
-            if (Objects.nonNull(orderDetails)) {
-                response.setItems(orderDetails.stream().map(this::getItemResponse).collect(Collectors.toList()));
+                if (Objects.nonNull(orderDetails)) {
+                    response.setItems(orderDetails.stream().map(this::getItemResponse).collect(Collectors.toList()));
+                }
+
+                CartModel cartModel = new CartModel();
+                cartModel.setId(UUID.randomUUID().toString());
+                cartModel.setOrderId(order.getId());
+                cartModel.setStatus(CartStatus.IN_PROGRESS.name());
+                cartModel.setUserId(user.getId());
+                cartModel.setStoreId(order.getStoreId());
+                cartRepository.save(cartModel);
+                return response;
             }
 
-            // create cart
-            /*
-            	@Id
+            OrderModel oderModel = orderRepository.findById(model.getOrderId()).orElseThrow(IllegalArgumentException::new);
 
-	private Date createdAt;
-	private Date modifiedAt;
-	private String createdBy;
-	private String modifiedBy;
-             */
-
-            CartModel cartModel = new CartModel();
-            cartModel.setId(UUID.randomUUID().toString());
-            cartModel.setOrderId(order.getId());
-            cartModel.setStatus(CartStatus.IN_PROGRESS.name());
-            cartModel.setUserId(user.getId());
-            cartModel.setStoreId(order.getStoreId());
-            cartRepository.save(cartModel);
+            order = orderDAO.updateOrder(oderModel, mapCartRequestToOrderRequest(request));
+            // update order
             return response;
+        } else {
+            return null;
         }
+    }
 
-        OrderModel oderModel = orderRepository.findById(model.getOrderId()).orElseThrow(IllegalArgumentException::new);
+    private int updateEventCount(String itemId, long count) {
+        ItemModel itemModel = itemRepository.findById(itemId).orElseThrow(IllegalArgumentException::new);
+        StoreModel storeModel = storeRepository.findById(itemModel.getStoreId()).orElseThrow(IllegalArgumentException::new);
 
-        order = orderDAO.updateOrder(oderModel, mapCartRequestToOrderRequest(request));
-        // update order
-        return response;
+        if(storeModel.getType == 1) {
+            RetailerUserModel retailerModel = retailerUserRepository.findByStoreId(itemModel.getStoreId()).orElseThrow(IllegalArgumentException::new);
+            EventModel event = eventRepository.findById(retailerModel.getUserId()).orElseThrow(IllegalArgumentException::new);
+            Date nowDate = new Date();
+            if(event.getStatus() == 1 && nowDate.before(event.getStopAt())) {
+                if(event.getRemainCount() > count) {
+                    event.setRemainCount(event.getRemainCount() - count);
+                } else if(event.getRemainCount() == count) {
+                    event.setRemainCount(0);
+                    event.setStatus(new Long(2));
+                } else {
+                    return 0;
+                }
+                eventRepository.save(event);
+                return 1;
+            } else {
+                return 0;
+            }
+        } else {
+            return 1;
+        }
     }
 
     private OrderRequest mapCartRequestToOrderRequest(CartRequest request) {
