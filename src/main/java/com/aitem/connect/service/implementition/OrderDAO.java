@@ -221,7 +221,6 @@ public class OrderDAO {
     }
 
     private ItemResponse getItemResponse(OrderDetailsModel orderDetailsModel) {
-
         ItemResponse response = new ItemResponse();
         response.setId(orderDetailsModel.getItemId());
 
@@ -230,7 +229,7 @@ public class OrderDAO {
         response.setName(itemModel.getName());
         response.setPrice(itemModel.getPrice());
         response.setType(itemModel.getType());
-        response.setQuantity(orderDetailsModel.getQuantity().intValue());
+        response.setQuantity(orderDetailsModel.getQuantity());
         return response;
     }
 

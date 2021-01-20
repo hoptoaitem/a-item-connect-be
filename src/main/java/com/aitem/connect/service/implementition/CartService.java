@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 @Service
@@ -163,7 +164,7 @@ public class CartService implements Cart {
         response.setName(itemModel.getName());
         response.setPrice(itemModel.getPrice());
         response.setType(itemModel.getType());
-        response.setQuantity(orderDetailsModel.getQuantity().intValue());
+        response.setQuantity(orderDetailsModel.getQuantity());
         return response;
     }
 }

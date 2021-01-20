@@ -162,7 +162,7 @@ public class EventService implements Event {
                 result.setName(item.getName());
                 result.setType(item.getType());
                 result.setPrice(item.getPrice());
-                result.setQuantity(item.getQuantity().intValue());
+                result.setQuantity(item.getQuantity());
                 result.setWebsite(item.getWebsite());
                 result.setDescription(item.getDescription());
                 result.setShortDescription(item.getShortDescription());
