@@ -230,7 +230,7 @@ public class OrderDAO {
         response.setName(itemModel.getName());
         response.setPrice(itemModel.getPrice());
         response.setType(itemModel.getType());
-        response.setQuantity(orderDetailsModel.getQuantity());
+        response.setQuantity(orderDetailsModel.getQuantity().intValue());
         return response;
     }
 
