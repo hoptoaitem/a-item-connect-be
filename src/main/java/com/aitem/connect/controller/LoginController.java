@@ -192,6 +192,7 @@ public class LoginController {
                 // response.setProfileType(user.getProfileType());
 
                 // return response;
+                return new IllegalArgumentException(e);
             }
         } catch (Exception e) {
             System.out.println("Exception on proceesing user");
