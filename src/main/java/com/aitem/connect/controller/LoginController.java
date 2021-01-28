@@ -198,7 +198,6 @@ public class LoginController {
             System.out.println(e.getMessage());
             throw new IllegalArgumentException(e);
         }
-        throw new IllegalArgumentException();
     }
 
     @ApiOperation(value = "Create user for the application")
