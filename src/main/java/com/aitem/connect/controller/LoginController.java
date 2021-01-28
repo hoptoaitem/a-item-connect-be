@@ -159,39 +159,39 @@ public class LoginController {
 
                 return response;
             } else {
-                CryptData a = crypt.encrypt(password);
-                user = new User();
-                user.setId(UUID.randomUUID().toString());
-                user.setIv(new String(a.getIv()));
-                user.setSalt(new String(a.getSalt()));
-                user.setPass(a.getCipherText());
-                user.setUsername("Event User");
-                user.setStatus(UserStatus.APPROVED.name());
-                user.setProfileType(ProfileType.SHOPPER.name());
-                user.setFirstName("Event");
-                user.setLastName("User");
-                user.setEmail(username);
-                user.setPhone("123");
-                AddressModel addressModel = new AddressModel();
-                addressModel.setId(UUID.randomUUID().toString());
-                addressRepository.save(addressModel);
-                user.setAddressId(addressModel.getId());
-                userRepository.save(user);
-                response.setProfileType(user.getProfileType());
-                Authentication authentication
-                        = authenticationRepository.findByUserId(user.getId());
-                if (authentication == null) {
-                    Authentication b = new Authentication();
-                    b.setId(UUID.randomUUID().toString());
-                    b.setToken(crypt.encrypt(user.getUsername() + "-" +
-                            LocalDate.now() + "-" + UUID.randomUUID().toString()).getCipherText());
-                    b.setUserId(user.getId());
-                    authentication = authenticationRepository.save(b);
-                }
-                response.setAuthToken(authentication.getToken());
-                response.setProfileType(user.getProfileType());
+                // CryptData a = crypt.encrypt(password);
+                // user = new User();
+                // user.setId(UUID.randomUUID().toString());
+                // user.setIv(new String(a.getIv()));
+                // user.setSalt(new String(a.getSalt()));
+                // user.setPass(a.getCipherText());
+                // user.setUsername("Event User");
+                // user.setStatus(UserStatus.APPROVED.name());
+                // user.setProfileType(ProfileType.SHOPPER.name());
+                // user.setFirstName("Event");
+                // user.setLastName("User");
+                // user.setEmail(username);
+                // user.setPhone("123");
+                // AddressModel addressModel = new AddressModel();
+                // addressModel.setId(UUID.randomUUID().toString());
+                // addressRepository.save(addressModel);
+                // user.setAddressId(addressModel.getId());
+                // userRepository.save(user);
+                // response.setProfileType(user.getProfileType());
+                // Authentication authentication
+                //         = authenticationRepository.findByUserId(user.getId());
+                // if (authentication == null) {
+                //     Authentication b = new Authentication();
+                //     b.setId(UUID.randomUUID().toString());
+                //     b.setToken(crypt.encrypt(user.getUsername() + "-" +
+                //             LocalDate.now() + "-" + UUID.randomUUID().toString()).getCipherText());
+                //     b.setUserId(user.getId());
+                //     authentication = authenticationRepository.save(b);
+                // }
+                // response.setAuthToken(authentication.getToken());
+                // response.setProfileType(user.getProfileType());
 
-                return response;
+                // return response;
             }
         } catch (Exception e) {
             System.out.println("Exception on proceesing user");
