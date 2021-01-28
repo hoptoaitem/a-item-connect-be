@@ -62,8 +62,7 @@ public class OrderDAO {
     public OrderModel createOrder(OrderRequest request, User user) {
         OrderModel model = new OrderModel();
         model.setId(UUID.randomUUID().toString());
-        model.setOrderExternalReferenceId
-                (String.valueOf(AitemConnectHelper.getRandomNumber(8)));
+        model.setOrderExternalReferenceId(String.valueOf(AitemConnectHelper.getRandomNumber(8)));
         model.setOrderStatus(OrderStatus.IN_CART.name());
         SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
         String created_date = format.format(new Date());

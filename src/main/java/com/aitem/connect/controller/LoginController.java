@@ -96,6 +96,111 @@ public class LoginController {
         throw new IllegalArgumentException();
     }
 
+    @ApiOperation(value = "Login for the application")
+    @PostMapping(path = "/loginForEvent", consumes = "application/json", produces = "application/json")
+    public LoginResponse loginForEvent(@RequestBody LoginRequest request) {
+        LoginResponse response = new LoginResponse();
+        String username = request.getUsername();
+        String password = request.getPassword();
+
+        User user = userRepository.findByEmail(username);
+        if (user == null) {
+            CryptData a = crypt.encrypt(password);
+            User user = new User();
+            user.setId(UUID.randomUUID().toString());
+            user.setIv(new String(a.getIv()));
+            user.setSalt(new String(a.getSalt()));
+            user.setPass(a.getCipherText());
+            user.setUsername("Event User");
+            user.setStatus(UserStatus.APPROVED.name());
+            user.setProfileType(ProfileType.SHOPPER.name());
+            user.setFirstName("Event");
+            user.setLastName("User");
+            user.setEmail(username);
+            user.setPhone("123");
+            AddressModel addressModel = new AddressModel();
+            addressModel.setId(UUID.randomUUID().toString());
+            addressRepository.save(addressModel);
+            user.setAddressId(addressModel.getId());
+            userRepository.save(user);
+            response.setProfileType(user.getProfileType());
+            Authentication authentication
+                    = authenticationRepository.findByUserId(user.getId());
+            if (authentication == null) {
+                Authentication a = new Authentication();
+                a.setId(UUID.randomUUID().toString());
+                a.setToken(crypt.encrypt(user.getUsername() + "-" +
+                        LocalDate.now() + "-" + UUID.randomUUID().toString()).getCipherText());
+                a.setUserId(user.getId());
+                authentication = authenticationRepository.save(a);
+            }
+            response.setAuthToken(authentication.getToken());
+            response.setProfileType(user.getProfileType());
+
+            return response;
+        }
+
+        try {
+            if (password.equals(crypt.decrypt(user.getIv(), user.getSalt(),
+                    user.getPass()))) {
+                response.setProfileType(user.getProfileType());
+                Authentication authentication
+                        = authenticationRepository.findByUserId(user.getId());
+                if (authentication == null) {
+                    Authentication a = new Authentication();
+                    a.setId(UUID.randomUUID().toString());
+                    a.setToken(crypt.encrypt(user.getUsername() + "-" +
+                            LocalDate.now() + "-" + UUID.randomUUID().toString()).getCipherText());
+                    a.setUserId(user.getId());
+                    authentication = authenticationRepository.save(a);
+                }
+                response.setAuthToken(authentication.getToken());
+                response.setProfileType(user.getProfileType());
+
+                return response;
+            } else {
+                CryptData a = crypt.encrypt(password);
+                User user = new User();
+                user.setId(UUID.randomUUID().toString());
+                user.setIv(new String(a.getIv()));
+                user.setSalt(new String(a.getSalt()));
+                user.setPass(a.getCipherText());
+                user.setUsername("Event User");
+                user.setStatus(UserStatus.APPROVED.name());
+                user.setProfileType(ProfileType.SHOPPER.name());
+                user.setFirstName("Event");
+                user.setLastName("User");
+                user.setEmail(username);
+                user.setPhone("123");
+                AddressModel addressModel = new AddressModel();
+                addressModel.setId(UUID.randomUUID().toString());
+                addressRepository.save(addressModel);
+                user.setAddressId(addressModel.getId());
+                userRepository.save(user);
+                response.setProfileType(user.getProfileType());
+                Authentication authentication
+                        = authenticationRepository.findByUserId(user.getId());
+                if (authentication == null) {
+                    Authentication a = new Authentication();
+                    a.setId(UUID.randomUUID().toString());
+                    a.setToken(crypt.encrypt(user.getUsername() + "-" +
+                            LocalDate.now() + "-" + UUID.randomUUID().toString()).getCipherText());
+                    a.setUserId(user.getId());
+                    authentication = authenticationRepository.save(a);
+                }
+                response.setAuthToken(authentication.getToken());
+                response.setProfileType(user.getProfileType());
+
+                return response;
+            }
+        } catch (Exception e) {
+            System.out.println("Exception on proceesing user");
+            System.out.println(e.getMessage());
+            throw new IllegalArgumentException(e);
+        }
+        throw new IllegalArgumentException();
+    }
+
     @ApiOperation(value = "Create user for the application")
     @PostMapping(path = "/user", consumes = "application/json", produces = "application/json")
     public LoginResponse createUser(@RequestBody UserRequest request) {
