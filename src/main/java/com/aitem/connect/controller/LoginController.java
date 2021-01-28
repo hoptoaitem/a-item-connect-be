@@ -127,12 +127,12 @@ public class LoginController {
             Authentication authentication
                     = authenticationRepository.findByUserId(user.getId());
             if (authentication == null) {
-                Authentication a = new Authentication();
-                a.setId(UUID.randomUUID().toString());
-                a.setToken(crypt.encrypt(user.getUsername() + "-" +
+                Authentication b = new Authentication();
+                b.setId(UUID.randomUUID().toString());
+                b.setToken(crypt.encrypt(user.getUsername() + "-" +
                         LocalDate.now() + "-" + UUID.randomUUID().toString()).getCipherText());
-                a.setUserId(user.getId());
-                authentication = authenticationRepository.save(a);
+                b.setUserId(user.getId());
+                authentication = authenticationRepository.save(b);
             }
             response.setAuthToken(authentication.getToken());
             response.setProfileType(user.getProfileType());
@@ -181,12 +181,12 @@ public class LoginController {
                 Authentication authentication
                         = authenticationRepository.findByUserId(user.getId());
                 if (authentication == null) {
-                    Authentication a = new Authentication();
-                    a.setId(UUID.randomUUID().toString());
-                    a.setToken(crypt.encrypt(user.getUsername() + "-" +
+                    Authentication b = new Authentication();
+                    b.setId(UUID.randomUUID().toString());
+                    b.setToken(crypt.encrypt(user.getUsername() + "-" +
                             LocalDate.now() + "-" + UUID.randomUUID().toString()).getCipherText());
-                    a.setUserId(user.getId());
-                    authentication = authenticationRepository.save(a);
+                    b.setUserId(user.getId());
+                    authentication = authenticationRepository.save(b);
                 }
                 response.setAuthToken(authentication.getToken());
                 response.setProfileType(user.getProfileType());
