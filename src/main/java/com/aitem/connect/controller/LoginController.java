@@ -106,7 +106,7 @@ public class LoginController {
         User user = userRepository.findByEmail(username);
         if (user == null) {
             CryptData a = crypt.encrypt(password);
-            User user = new User();
+            user = new User();
             user.setId(UUID.randomUUID().toString());
             user.setIv(new String(a.getIv()));
             user.setSalt(new String(a.getSalt()));
@@ -160,7 +160,7 @@ public class LoginController {
                 return response;
             } else {
                 CryptData a = crypt.encrypt(password);
-                User user = new User();
+                user = new User();
                 user.setId(UUID.randomUUID().toString());
                 user.setIv(new String(a.getIv()));
                 user.setSalt(new String(a.getSalt()));
