@@ -6,6 +6,7 @@ import com.aitem.connect.model.TransactionModel;
 import com.aitem.connect.repository.AuthenticationRepository;
 import com.aitem.connect.repository.UserRepository;
 import com.aitem.connect.service.implementition.TransactionService;
+import com.aitem.connect.request.TansactionRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
