@@ -83,7 +83,7 @@ public class TransactionService implements Transaction {
     @Override
     public List<TransactionResponse> getTransactions(User user, String userId) {
         if (user.getProfileType().equals(ProfileType.SUPER.name())) {
-            List<TransactionResponse> transactions = transactionRepository.findByUserId(userId).stream().map(this::getTransactionResponse).collect(Collectors.toList());;
+            List<TransactionResponse> transactions = transactionRepository.findAll().stream().map(this::getTransactionResponse).collect(Collectors.toList());;
             return transactions;
         } else {
             return null;
