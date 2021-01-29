@@ -258,7 +258,11 @@ public class OrderDAO {
         }
 
         if(request.getOrderStatus() == OrderStatus.PAYMENT_SUCCESSFUL) {
-            orderModel.setHistory(orderModel.getHistory() + "; Successed At: " + updated_date);
+            orderModel.setHistory(orderModel.getHistory() + "; Payment Successed At: " + updated_date);
+        }
+
+        if(request.getOrderStatus() == OrderStatus.PAYMENT_FAIL) {
+            orderModel.setHistory(orderModel.getHistory() + "; Payment Failed At: " + updated_date);
         }
 
         if(request.getOrderStatus() == OrderStatus.DRIVER_DECLINED) {
