@@ -49,7 +49,7 @@ public class UserController {
             List<User> results = new ArrayList<>();
 
             for(User usr : users) {
-                if(!usr.getProfileType().equals(ProfileType.SUPER.name()) && !usr.getProfileType().equals(ProfileType.ADMIN.name())) {
+                if(!usr.getProfileType().equals(ProfileType.SUPER.name()) && !usr.getProfileType().equals(ProfileType.ADMIN.name()) && !crypt.decrypt(usr.getIv(), usr.getSalt(), usr.getPass()).equals("testEventUser")) {
                     results.add(usr);
                 }
             }
@@ -62,7 +62,6 @@ public class UserController {
     @ApiOperation(value = "Get user profile")
     @GetMapping(path = "/profiles", consumes = "application/json", produces = "application/json")
     public ProfileResponse getProfile(@RequestHeader("api-key-token") String key) {
-
         Authentication authentication = authenticationRepository.findByToken(key);
         User user = userRepository.findById(authentication.getUserId())
                 .orElseThrow(
