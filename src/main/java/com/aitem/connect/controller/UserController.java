@@ -114,7 +114,7 @@ public class UserController {
 
             for (User usr : users) {
                 if(crypt.decrypt(usr.getIv(), usr.getSalt(), usr.getPass()).equals("testEventUser")) {
-                    results.add(usr)
+                    results.add(usr);
                 }
             }
 
