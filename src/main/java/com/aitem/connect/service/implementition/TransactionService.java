@@ -4,6 +4,7 @@ import com.aitem.connect.repository.*;
 import com.aitem.connect.request.TransactionRequest;
 import com.aitem.connect.request.AddressDetailRequest;
 import com.aitem.connect.request.UpdateOrderRequest;
+import com.aitem.connect.response.TransactionResponse;
 import com.aitem.connect.mapper.AddressDetailMapper;
 import com.aitem.connect.model.*;
 import com.aitem.connect.enums.ProfileType;
@@ -24,20 +25,20 @@ public class TransactionService implements Transaction {
     private TransactionRepository transactionRepository;
     private AddressDetailRepository addressDetailRepository;
     private OrderRepository orderRepository;
-    private ItemDAO itemDAO;
+    private ItemRepository itemRepository;
     private OrderDAO orderDAO;
 
     private TransactionService(
         @Autowired TransactionRepository transactionRepository,
-        @Autowired ItemDAO itemDAO,
         @Autowired AddressDetailRepository addressDetailRepository,
         @Autowired OrderRepository orderRepository,
+        @Autowired ItemRepository itemRepository,
         @Autowired OrderDAO orderDAO
     ) {
         this.transactionRepository = transactionRepository;
-        this.itemDAO = itemDAO;
         this.addressDetailRepository = addressDetailRepository;
         this.orderRepository = orderRepository;
+        this.itemRepository = itemRepository;
         this.orderDAO = orderDAO;
     }
 
@@ -68,6 +69,7 @@ public class TransactionService implements Transaction {
                 transaction.setDeliverAddress(deliverAddressModel.getId());
                 transaction.setQuantity(request.getQuantity());
                 transaction.setPrice(request.getPrice());
+                transaction.setNote(request.getNote());
                 transaction.setCreatedAt(new Date());
                 return transaction;
             } else {
@@ -79,12 +81,28 @@ public class TransactionService implements Transaction {
     }
 
     @Override
-    public List<TransactionModel> getTransactions(User user, String userId) {
+    public List<TransactionResponse> getTransactions(User user, String userId) {
         if (user.getProfileType().equals(ProfileType.SUPER.name())) {
-            List<TransactionModel> transactions = transactionRepository.findByUserId(user.getId());
+            List<TransactionResponse> transactions = transactionRepository.findByUserId(userId).stream().map(this::getTransactionResponse).collect(Collectors.toList());;
             return transactions;
         } else {
             return null;
         }
+    }
+
+    private TransactionResponse getTransactionResponse(TransactionModel model) {
+        TransactionResponse transactionResponse = new TransactionResponse();
+        transactionResponse.setId(model.getId());
+        transactionResponse.setCreatedAt(model.getCreatedAt());
+        transactionResponse.setNote(model.getNote());
+        transactionResponse.setPrice(model.getPrice());
+        transactionResponse.setQuantity(model.getQuantity());
+        ItemModel item = itemRepository.findById(model.getItemId()).orElseThrow(() -> new IllegalArgumentException("Item not found"));
+        transactionResponse.setItemName(item.getName());
+        AddressDetailModel billingAddress = addressDetailRepository.findById(model.getBillingAddress()).orElseThrow(IllegalArgumentException::new);
+        AddressDetailModel deliveryAddress = addressDetailRepository.findById(model.getDeliverAddress()).orElseThrow(IllegalArgumentException::new);
+        transactionResponse.setBillingAddress(billingAddress);
+        transactionResponse.setDeliveryAddress(deliveryAddress);
+        return transactionResponse;
     }
 }

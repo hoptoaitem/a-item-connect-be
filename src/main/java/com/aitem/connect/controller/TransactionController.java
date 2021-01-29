@@ -7,6 +7,7 @@ import com.aitem.connect.repository.AuthenticationRepository;
 import com.aitem.connect.repository.UserRepository;
 import com.aitem.connect.service.implementition.TransactionService;
 import com.aitem.connect.request.TransactionRequest;
+import com.aitem.connect.response.TransactionResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class TransactionController {
 
     @ApiOperation(value = "Get the transactions for the shopper.")
     @GetMapping(path = "/transactions/{user-id}", consumes = "application/json", produces = "application/json")
-    public List<TransactionModel> getTransactions(@RequestHeader("api-key-token") String key, @PathVariable("user-id") String userId) {
+    public List<TransactionResponse> getTransactions(@RequestHeader("api-key-token") String key, @PathVariable("user-id") String userId) {
         Authentication authentication = authenticationRepository.findByToken(key);
         User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
         return service.getTransactions(user, userId);
