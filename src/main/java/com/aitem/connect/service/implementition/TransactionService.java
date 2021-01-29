@@ -15,12 +15,12 @@ import java.util.stream.Collectors;
 import java.text.SimpleDateFormat;
 
 @Service
-public class TransactionService implements Event {
+public class TransactionService implements Transaction {
     private TransactionRepository transactionRepository;
     private AddressRepository addressRepository;
     private ItemDAO itemDAO;
 
-    private EventService(
+    private TransactionService(
         @Autowired TransactionRepository transactionRepository,
         @Autowired ItemDAO itemDAO,
         @Autowired AddressRepository addressRepository
