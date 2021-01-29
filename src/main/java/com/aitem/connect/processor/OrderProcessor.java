@@ -43,7 +43,6 @@ public class OrderProcessor {
 
     @Async("threadPoolTaskExecutor")
     public void handleDriverForOrder(OrderModel orderModel) {
-
         StoreModel storeModel = storeRepository.findById(orderModel.getStoreId())
                 .orElseThrow(
                         () -> new IllegalArgumentException("Store not found"));

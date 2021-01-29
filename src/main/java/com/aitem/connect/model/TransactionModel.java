@@ -25,5 +25,6 @@ public class TransactionModel implements Serializable {
 	private String deliverAddress;
 	private long quantity;
 	private String price;
+	private String note;
 	private Date createdAt;
 }

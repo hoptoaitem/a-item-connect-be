@@ -7,5 +7,6 @@ CREATE TABLE IF NOT EXISTS transaction (
     deliver_address VARCHAR(128),
     quantity INTEGER NOT NULL,
     price VARCHAR(100),
+    note VARCHAR(128),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 )

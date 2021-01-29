@@ -17,19 +17,19 @@ import java.util.Date;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @JsonInclude(JsonInclude.Include.NON_NULL) //or Include.NON_EMPTY, if that fits your use case
-public class AddressModel {
+public class AddressDetailModel {
 	@Id
 	private String id;
-	private String addressName;
+	private String firstName;
+	private String lastName;
+	private String phone;
+	private String email;
 	@Column(name="street_address_1")
 	private String streetAddress1;
 	private String streetAddress;
 	private String city;
-	private String zip;
 	private String state;
-
-	private Date createdAt;
-	private Date modifiedAt;
+	private String zip;
 	private String createdBy;
 	private String modifiedBy;
 }

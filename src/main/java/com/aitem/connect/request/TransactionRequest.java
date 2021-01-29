@@ -7,10 +7,11 @@ import java.util.List;
 
 @Data
 public class TransactionRequest implements Serializable {
-	private AddressRequest billingAddress;
-	private AddressRequest deliverAddress;
+	private AddressDetailRequest billingAddress;
+	private AddressDetailRequest deliverAddress;
 	private String orderId;
 	private String itemId;
 	private Integer quantity;
 	private String price;
+	private String note;
 }
