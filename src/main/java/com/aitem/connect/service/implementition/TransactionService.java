@@ -57,6 +57,7 @@ public class TransactionService implements Transaction {
         }
     }
 
+    @Override
     public List<TransactionModel> getTransactions(User user, String userId) {
         if (user.getProfileType().equals(ProfileType.SUPER.name())) {
             List<TransactionModel> transactions = transactionRepository.findByUserId(user);
