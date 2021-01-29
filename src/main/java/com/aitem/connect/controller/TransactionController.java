@@ -44,7 +44,7 @@ public class TransactionController {
 
     @ApiOperation(value = "Get the transactions for the shopper.")
     @GetMapping(path = "/transactions/{user-id}", consumes = "application/json", produces = "application/json")
-    public List<TransactionModel> getTransactions(@RequestHeader("api-key-token") String key, @PathVariable("event-id") String userId) {
+    public List<TransactionModel> getTransactions(@RequestHeader("api-key-token") String key, @PathVariable("user-id") String userId) {
         Authentication authentication = authenticationRepository.findByToken(key);
         User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
         return service.getTransactions(user, userId);
