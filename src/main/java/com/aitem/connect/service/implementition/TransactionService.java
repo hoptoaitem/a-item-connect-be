@@ -7,6 +7,7 @@ import com.aitem.connect.request.UpdateOrderRequest;
 import com.aitem.connect.mapper.AddressDetailMapper;
 import com.aitem.connect.model.*;
 import com.aitem.connect.enums.ProfileType;
+import com.aitem.connect.enums.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.aitem.connect.service.Transaction;
@@ -21,7 +22,7 @@ import java.text.SimpleDateFormat;
 @Service
 public class TransactionService implements Transaction {
     private TransactionRepository transactionRepository;
-    private AddressRepository addressRepository;
+    private AddressDetailRepository addressDetailRepository;
     private OrderRepository orderRepository;
     private ItemDAO itemDAO;
     private OrderDAO orderDAO;
@@ -29,13 +30,13 @@ public class TransactionService implements Transaction {
     private TransactionService(
         @Autowired TransactionRepository transactionRepository,
         @Autowired ItemDAO itemDAO,
-        @Autowired AddressRepository addressRepository,
+        @Autowired AddressDetailRepository addressDetailRepository,
         @Autowired OrderRepository orderRepository,
         @Autowired OrderDAO orderDAO
     ) {
         this.transactionRepository = transactionRepository;
         this.itemDAO = itemDAO;
-        this.addressRepository = addressRepository;
+        this.addressDetailRepository = addressDetailRepository;
         this.orderRepository = orderRepository;
         this.orderDAO = orderDAO;
     }
@@ -43,7 +44,7 @@ public class TransactionService implements Transaction {
     @Override
     public TransactionModel createTransaction(TransactionRequest request, User user) {
         if (user.getProfileType().equals(ProfileType.SHOPPER.name())) {
-            OrderModel order = orderRepository.findById(request.getOrderId());
+            OrderModel order = orderRepository.findById(request.getOrderId()).orElseThrow(() -> new IllegalArgumentException("Order not found"));
 
             if (order.getOrderStatus().equals(OrderStatus.CHECKED_OUT.name())) {
                 UpdateOrderRequest req = new UpdateOrderRequest();
@@ -52,11 +53,11 @@ public class TransactionService implements Transaction {
                 AddressDetailRequest billingAddressRequest = request.getBillingAddress();
                 AddressDetailModel billingAddressModel = AddressDetailMapper.getAddressDetailModel(billingAddressRequest);
                 billingAddressModel.setId(UUID.randomUUID().toString());
-                billingAddressModel = addressRepository.save(billingAddressModel);
+                billingAddressModel = addressDetailRepository.save(billingAddressModel);
                 AddressDetailRequest deliverAddressRequest = request.getDeliverAddress();
                 AddressDetailModel deliverAddressModel = AddressDetailMapper.getAddressDetailModel(deliverAddressRequest);
                 deliverAddressModel.setId(UUID.randomUUID().toString());
-                deliverAddressModel = addressRepository.save(deliverAddressModel);
+                deliverAddressModel = addressDetailRepository.save(deliverAddressModel);
                 TransactionModel transaction = new TransactionModel();
                 transaction.setId(UUID.randomUUID().toString());
                 transaction.setUserId(user.getId());
