@@ -16,8 +16,6 @@ import java.util.Date;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class TransactionModel implements Serializable {
-    billing_address VARCHAR(128),
-    deliver_address VARCHAR(128),
     @Id
 	private String id;
 	private String userId;
