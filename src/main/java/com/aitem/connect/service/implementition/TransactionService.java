@@ -48,6 +48,7 @@ public class TransactionService implements Transaction {
 
             if (order.getOrderStatus().equals(OrderStatus.CHECKED_OUT.name())) {
                 UpdateOrderRequest req = new UpdateOrderRequest();
+                req.setOrderId(request.getOrderId());
                 req.setOrderStatus(OrderStatus.PAYMENT_SUCCESSFUL);
                 order = orderDAO.updateOrderStatus(req, user);
                 AddressDetailRequest billingAddressRequest = request.getBillingAddress();
