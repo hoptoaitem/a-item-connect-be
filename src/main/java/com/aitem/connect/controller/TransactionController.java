@@ -6,7 +6,7 @@ import com.aitem.connect.model.TransactionModel;
 import com.aitem.connect.repository.AuthenticationRepository;
 import com.aitem.connect.repository.UserRepository;
 import com.aitem.connect.service.implementition.TransactionService;
-import com.aitem.connect.request.TansactionRequest;
+import com.aitem.connect.request.TransactionRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class TransactionController {
 
     @ApiOperation(value = "Creat Transaction For the shopper.")
     @PostMapping(path = "/transactions", consumes = "application/json", produces = "application/json")
-    public UUID createTransaction(@RequestHeader("api-key-token") String key, @RequestBody TansactionRequest request) {
+    public UUID createTransaction(@RequestHeader("api-key-token") String key, @RequestBody TransactionRequest request) {
         Authentication authentication = authenticationRepository.findByToken(key);
         User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
         TransactionModel model = service.createTransaction(request, user);

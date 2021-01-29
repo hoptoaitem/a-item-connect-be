@@ -6,6 +6,7 @@ import com.aitem.connect.model.*;
 import com.aitem.connect.enums.ProfileType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.aitem.connect.service.Transaction;
 
 import java.util.ArrayList;
 import java.util.Date;
