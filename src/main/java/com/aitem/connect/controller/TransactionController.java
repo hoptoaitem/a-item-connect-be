@@ -36,11 +36,11 @@ public class TransactionController {
 
     @ApiOperation(value = "Creat Transaction For the shopper.")
     @PostMapping(path = "/transactions", consumes = "application/json", produces = "application/json")
-    public UUID createTransaction(@RequestHeader("api-key-token") String key, @RequestBody TransactionRequest request) {
+    public TransactionModel createTransaction(@RequestHeader("api-key-token") String key, @RequestBody TransactionRequest request) {
         Authentication authentication = authenticationRepository.findByToken(key);
         User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
         TransactionModel model = service.createTransaction(request, user);
-        return UUID.fromString(model.getId());
+        return model;
     }
 
     @ApiOperation(value = "Get the transactions for the shopper.")
