@@ -7,6 +7,7 @@ import com.aitem.connect.repository.AuthenticationRepository;
 import com.aitem.connect.repository.UserRepository;
 import com.aitem.connect.response.ProfileResponse;
 import com.aitem.connect.request.UpdateUserStatusRequest;
+import com.aitem.connect.helper.Crypt;
 import com.aitem.connect.enums.ProfileType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,14 +25,17 @@ public class UserController {
     private UserRepository userRepository;
     private AddressRepository addressRepository;
     private AuthenticationRepository authenticationRepository;
+    private Crypt crypt;
 
     private UserController(
             @Autowired AuthenticationRepository authenticationRepository,
             @Autowired UserRepository userRepository,
-            @Autowired AddressRepository addressRepository) {
+            @Autowired AddressRepository addressRepository,
+            @Autowired Crypt crypt) {
         this.authenticationRepository = authenticationRepository;
         this.userRepository = userRepository;
         this.addressRepository = addressRepository;
+        this.crypt = crypt;
     }
 
     @ApiOperation(value = "Get users")
@@ -93,6 +97,28 @@ public class UserController {
 
         if (user.getProfileType().equals(ProfileType.SUPER.name())) {
             return userRepository.findByProfileType(ProfileType.ADMIN.name());
+        } else {
+            return null;
+        }
+    }
+
+    @ApiOperation(value = "Get eventUsers")
+    @GetMapping(path = "/eventUsers", consumes = "application/json", produces = "application/json")
+    public List<User> getEventUsers(@RequestHeader("api-key-token") String key) {
+        Authentication authentication = authenticationRepository.findByToken(key);
+        User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found."));
+
+        if (user.getProfileType().equals(ProfileType.SUPER.name())) {
+            List<User> users = userRepository.findByProfileType(ProfileType.SHOPPER.name());
+            List<User> results = new ArrayList<User>();
+
+            for (User usr : users) {
+                if(crypt.decrypt(usr.getIv(), usr.getSalt(), usr.getPass()).equals("testEventUser")) {
+                    results.add(usr)
+                }
+            }
+
+            return usr;
         } else {
             return null;
         }
