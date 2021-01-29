@@ -71,6 +71,7 @@ public class TransactionService implements Transaction {
                 transaction.setPrice(request.getPrice());
                 transaction.setNote(request.getNote());
                 transaction.setCreatedAt(new Date());
+                transaction=transactionRepository.save(transaction);
                 return transaction;
             } else {
                 return null;
