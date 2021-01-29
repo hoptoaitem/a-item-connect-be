@@ -118,7 +118,7 @@ public class UserController {
                 }
             }
 
-            return usr;
+            return results;
         } else {
             return null;
         }
