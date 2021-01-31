@@ -25,6 +25,9 @@ public class TransactionService implements Transaction {
     private TransactionRepository transactionRepository;
     private AddressDetailRepository addressDetailRepository;
     private OrderRepository orderRepository;
+    private StoreRepository storeRepository;
+    private RetailerUserRepository retailerUserRepository;
+    private EventRepository eventRepository;
     private ItemRepository itemRepository;
     private OrderDAO orderDAO;
 
@@ -32,12 +35,18 @@ public class TransactionService implements Transaction {
         @Autowired TransactionRepository transactionRepository,
         @Autowired AddressDetailRepository addressDetailRepository,
         @Autowired OrderRepository orderRepository,
+        @Autowired StoreRepository storeRepository,
+        @Autowired RetailerUserRepository retailerUserRepository,
+        @Autowired EventRepository eventRepository,
         @Autowired ItemRepository itemRepository,
         @Autowired OrderDAO orderDAO
     ) {
         this.transactionRepository = transactionRepository;
         this.addressDetailRepository = addressDetailRepository;
         this.orderRepository = orderRepository;
+        this.storeRepository = storeRepository;
+        this.retailerUserRepository = retailerUserRepository;
+        this.eventRepository = eventRepository;
         this.itemRepository = itemRepository;
         this.orderDAO = orderDAO;
     }
