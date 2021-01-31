@@ -72,7 +72,7 @@ public class EventService implements Event {
             Date nowDate = new Date();
 
             for (EventModel event : events) {
-                if(nowDate.before(event.getStopAt()) && event.getRemainCount() > 0) {
+                if(nowDate.before(event.getStopAt())) {
                     results.add(event);
                 }
             }
