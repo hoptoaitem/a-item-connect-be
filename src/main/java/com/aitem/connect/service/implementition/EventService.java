@@ -59,7 +59,7 @@ public class EventService implements Event {
             Date nowDate = new Date();
 
             for (EventModel event : events) {
-                if(event.getStatus() == 1 && (nowDate.after(event.getStopAt()) || event.getRemainCount() == 0)) {
+                if(event.getStatus() == 1 && nowDate.after(event.getStopAt())) {
                     event.setStatus(2);
                     eventRepository.save(event);
                 }

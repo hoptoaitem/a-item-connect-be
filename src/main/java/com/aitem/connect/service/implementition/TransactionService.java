@@ -72,12 +72,46 @@ public class TransactionService implements Transaction {
                 transaction.setNote(request.getNote());
                 transaction.setCreatedAt(new Date());
                 transaction=transactionRepository.save(transaction);
-                return transaction;
+
+                var status = updateEventCount(request.getItemId(), request.getQuantity());
+
+                if(status == 1) {
+                    return transaction;    
+                } else {
+                    return null;
+                }
             } else {
                 return null;
             }
         } else {
             return null;
+        }
+    }
+
+    private int updateEventCount(String itemId, long count) {
+        ItemModel itemModel = itemRepository.findById(itemId).orElseThrow(IllegalArgumentException::new);
+        StoreModel storeModel = storeRepository.findById(itemModel.getStoreId()).orElseThrow(IllegalArgumentException::new);
+
+        if(storeModel.getType() == 1) {
+            RetailerUserModel retailerModel = retailerUserRepository.findByStoreId(itemModel.getStoreId());
+            EventModel event = eventRepository.findById(retailerModel.getUserId()).orElseThrow(IllegalArgumentException::new);
+            Date nowDate = new Date();
+            if(event.getStatus() == 1 && nowDate.before(event.getStopAt())) {
+                if(event.getRemainCount() > count) {
+                    event.setRemainCount(event.getRemainCount() - count);
+                } else if(event.getRemainCount() == count) {
+                    event.setRemainCount(0);
+                    //event.setStatus(new Long(2));
+                } else {
+                    return 0;
+                }
+                eventRepository.save(event);
+                return 1;
+            } else {
+                return 0;
+            }
+        } else {
+            return 1;
         }
     }
 
