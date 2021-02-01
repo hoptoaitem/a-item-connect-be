@@ -2,10 +2,13 @@ package com.aitem.connect.controller;
 
 import com.aitem.connect.model.Authentication;
 import com.aitem.connect.model.User;
+import com.aitem.connect.model.TransactionModel;
 import com.aitem.connect.repository.AddressRepository;
 import com.aitem.connect.repository.AuthenticationRepository;
 import com.aitem.connect.repository.UserRepository;
+import com.aitem.connect.repository.TransactionRepository;
 import com.aitem.connect.response.ProfileResponse;
+import com.aitem.connect.response.EventUserResponse;
 import com.aitem.connect.request.UpdateUserStatusRequest;
 import com.aitem.connect.helper.Crypt;
 import com.aitem.connect.enums.ProfileType;
@@ -25,16 +28,19 @@ public class UserController {
     private UserRepository userRepository;
     private AddressRepository addressRepository;
     private AuthenticationRepository authenticationRepository;
+    private TransactionRepository transactionRepository;
     private Crypt crypt;
 
     private UserController(
             @Autowired AuthenticationRepository authenticationRepository,
             @Autowired UserRepository userRepository,
             @Autowired AddressRepository addressRepository,
+            @Autowired TransactionRepository transactionRepository,
             @Autowired Crypt crypt) {
         this.authenticationRepository = authenticationRepository;
         this.userRepository = userRepository;
         this.addressRepository = addressRepository;
+        this.transactionRepository = transactionRepository;
         this.crypt = crypt;
     }
 
@@ -103,17 +109,21 @@ public class UserController {
 
     @ApiOperation(value = "Get eventUsers")
     @GetMapping(path = "/eventUsers", consumes = "application/json", produces = "application/json")
-    public List<User> getEventUsers(@RequestHeader("api-key-token") String key) {
+    public List<EventUserResponse> getEventUsers(@RequestHeader("api-key-token") String key) {
         Authentication authentication = authenticationRepository.findByToken(key);
         User user = userRepository.findById(authentication.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found."));
 
         if (user.getProfileType().equals(ProfileType.SUPER.name())) {
             List<User> users = userRepository.findByProfileType(ProfileType.SHOPPER.name());
-            List<User> results = new ArrayList<User>();
+            List<EventUserResponse> results = new ArrayList<EventUserResponse>();
 
             for (User usr : users) {
                 if(crypt.decrypt(usr.getIv(), usr.getSalt(), usr.getPass()).equals("testEventUser")) {
-                    results.add(usr);
+                    EventUserResponse resp = new EventUserResponse();
+                    resp.setUser(usr);
+                    List<TransactionModel> transModels = transactionRepository.findByUserId(usr.getId());
+                    resp.setTransactCount(transModels.size());
+                    results.add(resp);
                 }
             }
 

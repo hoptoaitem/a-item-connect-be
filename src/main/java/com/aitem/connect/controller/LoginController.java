@@ -227,6 +227,7 @@ public class LoginController {
         user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
+        user.setCreatedAt(new Date());
 
         AddressRequest address = request.getAddress();
         AddressModel addressModel = AddressMapper.getAddressModel(address);
