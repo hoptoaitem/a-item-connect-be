@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.UUID;
+import java.util.Date;
 
 @Api(tags = "Login API")
 @CrossOrigin
@@ -227,7 +228,7 @@ public class LoginController {
         user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
-        user.setCreatedAt(LocalDate.now());
+        user.setCreatedAt(new Date());
 
         AddressRequest address = request.getAddress();
         AddressModel addressModel = AddressMapper.getAddressModel(address);
