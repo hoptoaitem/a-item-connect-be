@@ -59,7 +59,6 @@ public class PictureService implements Picture {
 
     @Override
     public PictureResponse upload(MultipartFile file, User user) {
-
         PictureResponse response = new PictureResponse();
         String text = null;
         try {
@@ -91,7 +90,6 @@ public class PictureService implements Picture {
     }
 
     public PictureResponse getPictureDetails(String pictureId, User user) {
-
         try {
             PictureModel model = pictureRepository.findById(pictureId)
                     .orElseThrow(IllegalArgumentException::new);

@@ -19,12 +19,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/")
 public class PictureController {
-
-
     private PictureService service;
     private AuthenticationRepository authenticationRepository;
     private UserRepository userRepository;
-
 
     private PictureController(
             @Autowired PictureService service,
@@ -36,12 +33,10 @@ public class PictureController {
         this.userRepository = userRepository;
     }
 
-
     @ApiOperation(value = "get the picture details")
     @GetMapping(path = "/pictures/{picture_id}", consumes = "application/json", produces = "application/json")
     public PictureResponse getPicture(@RequestHeader("api-key-token") String key,
                                       @PathVariable("picture_id") String pictureId) {
-
         // TODO: move this to common location
         Authentication authentication = authenticationRepository.findByToken(key);
         User user = userRepository.findById(authentication.getUserId())
@@ -55,7 +50,6 @@ public class PictureController {
     @PostMapping(path = "/pictures")
     public PictureResponse upload(@RequestHeader("api-key-token") String key,
                        @RequestParam("file") MultipartFile file) {
-
         // TODO: move this to common location
         Authentication authentication = authenticationRepository.findByToken(key);
         User user = userRepository.findById(authentication.getUserId())
